@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-18T00:00:00Z",
+  "title": "Design System: Chatwoot WhatsApp Fork",
+  "extensions": {
+    "colorMeta": {
+      "whatsapp-green": {
+        "role": "primary",
+        "displayName": "WhatsApp Green",
+        "tonalRamp": ["#062E26", "#008069", "#00A884", "#2BB394", "#82DDC5", "#C7F4E7", "#E0F8F1", "#FAFEFC"]
+      },
+      "outgoing-mint": {
+        "role": "primary",
+        "displayName": "Outgoing Mint",
+        "tonalRamp": ["#2E5A45", "#4E8A6B", "#7BB894", "#A6D9BC", "#C6ECD5", "#D9FDD3", "#E9FEE6", "#F6FFF4"]
+      },
+      "header-whisper-mint": {
+        "role": "secondary",
+        "displayName": "Header Whisper Mint",
+        "tonalRamp": ["#0D3D38", "#008573", "#12A594", "#53B9AB", "#A1DED2", "#CCF3EA", "#F3FBF9", "#FAFEFD"]
+      },
+      "bot-lavender": {
+        "role": "tertiary",
+        "displayName": "Bot Lavender",
+        "tonalRamp": ["#272962", "#5753C6", "#5B5BD6", "#9B9EF0", "#CBCDFF", "#E6E7FF", "#F0F1FE", "#FDFDFF"]
+      },
+      "chat-wallpaper-tan": {
+        "role": "neutral",
+        "displayName": "Chat Wallpaper Tan",
+        "tonalRamp": ["#2E2822", "#4A4038", "#6B5F52", "#8C7E6C", "#AD9D87", "#C9BBA5", "#E5DDD5", "#F5F1EC"]
+      },
+      "surface-white": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "tonalRamp": ["#E8E8E8", "#EDEDED", "#F2F2F2", "#F5F5F5", "#F8F8F8", "#FAFAFA", "#FCFCFC", "#FEFEFE"]
+      },
+      "ink-slate": {
+        "role": "neutral",
+        "displayName": "Ink Slate",
+        "tonalRamp": ["#1C2024", "#60646C", "#8B8D98", "#CDCED6", "#E0E1E6", "#F0F0F3", "#F9F9FB", "#FCFCFD"]
+      },
+      "ink-slate-muted": {
+        "role": "neutral",
+        "displayName": "Ink Slate Muted",
+        "tonalRamp": ["#1C2024", "#60646C", "#8B8D98", "#CDCED6", "#E0E1E6", "#F0F0F3", "#F9F9FB", "#FCFCFD"]
+      },
+      "border-hairline": {
+        "role": "neutral",
+        "displayName": "Border Hairline",
+        "tonalRamp": ["#202020", "#646464", "#8D8D8D", "#CECECE", "#E0E0E0", "#F0F0F0", "#F9F9F9", "#FCFCFC"]
+      },
+      "warning-amber": {
+        "role": "neutral",
+        "displayName": "Warning Amber",
+        "tonalRamp": ["#4F3422", "#AB6400", "#FFBA18", "#FFC53D", "#E9C162", "#FBE577", "#FFF7C2", "#FEFDFB"]
+      },
+      "error-ruby": {
+        "role": "neutral",
+        "displayName": "Error Ruby",
+        "tonalRamp": ["#64172B", "#CA244D", "#DC3B5D", "#E54666", "#EFACB8", "#FFCED6", "#FEEAED", "#FFFCFD"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Heading 1)", "purpose": "Page titles and panel headers. The ceiling of the type scale — no marketing-scale heading exists above it." },
+      "headline": { "displayName": "Headline (Heading 2)", "purpose": "Section headings, card titles." },
+      "title": { "displayName": "Title (Heading 3)", "purpose": "Card headings, breadcrumbs, subsections." },
+      "body": { "displayName": "Body", "purpose": "Default paragraph and UI text throughout the dashboard." },
+      "label": { "displayName": "Label / Small", "purpose": "Footnotes, tags, badges, captions, timestamps." }
+    },
+    "shadows": [
+      { "name": "floating-sm", "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "purpose": "Dropdowns and small popovers — content that floats above the page." },
+      { "name": "floating-lg", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "Modals and larger overlays." }
+    ],
+    "motion": [
+      { "name": "ease-control", "value": "100ms ease-out", "purpose": "Default transition for buttons, inputs, and other interactive controls (background/filter/outline changes)." },
+      { "name": "ease-reveal", "value": "300ms ease-out (fade-in-up: opacity 0→1, translateY 0.5rem→0)", "purpose": "Onboarding and celebratory reveal moments (rare — most of the UI is not choreographed)." }
+    ],
+    "breakpoints": [
+      { "name": "xs", "value": "480px" },
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" },
+      { "name": "3xl", "value": "1900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one solid, saturated control in the system — primary actions only.",
+      "html": "<button class=\"ds-btn-primary\">Enviar</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:8px; height:40px; padding:0 16px; background:#008069; color:#fff; border:none; border-radius:8px; font-family:Inter,sans-serif; font-size:14px; font-weight:460; line-height:21px; letter-spacing:-0.28px; cursor:pointer; transition:filter 100ms ease-out; } .ds-btn-primary:hover { filter:brightness(1.1); } .ds-btn-primary:focus-visible { outline:2px solid #008069; outline-offset:2px; }"
+    },
+    {
+      "name": "Faded Button",
+      "kind": "button",
+      "refersTo": "button-faded",
+      "description": "The default secondary action — brand color at low opacity, more common in this system than a bordered outline button.",
+      "html": "<button class=\"ds-btn-faded\">Cancelar</button>",
+      "css": ".ds-btn-faded { display:inline-flex; align-items:center; justify-content:center; height:40px; padding:0 16px; background:rgba(0,128,105,0.1); color:#008069; border:none; border-radius:8px; font-family:Inter,sans-serif; font-size:14px; font-weight:460; line-height:21px; letter-spacing:-0.28px; cursor:pointer; transition:background 100ms ease-out; } .ds-btn-faded:hover { background:rgba(0,128,105,0.2); } .ds-btn-faded:focus-visible { outline:2px solid #008069; outline-offset:2px; }"
+    },
+    {
+      "name": "Outgoing Message Bubble",
+      "kind": "custom",
+      "refersTo": "message-bubble-outgoing",
+      "description": "Agent/outgoing message — mint green, right-aligned, WhatsApp's exact read-tick sequence.",
+      "html": "<div class=\"ds-bubble-outgoing\"><p>Olá! Como posso ajudar?</p><span class=\"ds-bubble-meta\">10:42 <svg class=\"ds-tick\" viewBox=\"0 0 16 11\" width=\"14\" height=\"10\" fill=\"none\"><path d=\"M1 5.5L4.5 9L11 1.5\" stroke=\"#53BDEB\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M5.5 5.5L9 9L15.5 1.5\" stroke=\"#53BDEB\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span></div>",
+      "css": ".ds-bubble-outgoing { max-width:420px; margin-left:auto; background:#D9FDD3; color:#1C2024; padding:12px 16px; border-radius:16px 16px 2px 16px; font-family:Inter,sans-serif; font-size:14px; line-height:21px; } .ds-bubble-outgoing p { margin:0 0 6px; } .ds-bubble-meta { display:flex; align-items:center; gap:4px; justify-content:flex-end; font-size:11px; color:#60646C; }"
+    },
+    {
+      "name": "Incoming Message Bubble",
+      "kind": "custom",
+      "refersTo": "message-bubble-incoming",
+      "description": "Contact/incoming message — neutral gray, left-aligned.",
+      "html": "<div class=\"ds-bubble-incoming\"><p>Olá, tudo bem? Preciso de ajuda com meu pedido.</p><span class=\"ds-bubble-meta\">10:41</span></div>",
+      "css": ".ds-bubble-incoming { max-width:420px; background:#F0F0F1; color:#1C2024; padding:12px 16px; border-radius:16px 16px 16px 2px; font-family:Inter,sans-serif; font-size:14px; line-height:21px; } .ds-bubble-incoming p { margin:0 0 6px; } .ds-bubble-meta { display:block; font-size:11px; color:#60646C; }"
+    },
+    {
+      "name": "Conversation Header",
+      "kind": "custom",
+      "refersTo": "conversation-header",
+      "description": "The tinted bar above every message thread, separating it from both the panel white and the wallpapered chat surface.",
+      "html": "<div class=\"ds-conv-header\"><div class=\"ds-conv-avatar\">J</div><div><div class=\"ds-conv-name\">Jane</div><div class=\"ds-conv-sub\">#1</div></div></div>",
+      "css": ".ds-conv-header { display:flex; align-items:center; gap:8px; height:48px; padding:0 12px; background:#F3FBF9; } .ds-conv-avatar { width:32px; height:32px; border-radius:9999px; background:#E6E7FF; color:#5753C6; display:flex; align-items:center; justify-content:center; font-family:Inter,sans-serif; font-size:14px; font-weight:500; } .ds-conv-name { font-family:Inter,sans-serif; font-size:14px; font-weight:500; color:#1C2024; line-height:1.2; } .ds-conv-sub { font-family:Inter,sans-serif; font-size:11px; color:#60646C; }"
+    },
+    {
+      "name": "Kanban Card",
+      "kind": "card",
+      "refersTo": "kanban-card",
+      "description": "A conversation card on the funnel board — bordered, flat, drag-grabbable.",
+      "html": "<div class=\"ds-kanban-card\"><div class=\"ds-kanban-card-top\"><div class=\"ds-conv-avatar ds-kanban-avatar\">J</div><span class=\"ds-kanban-name\">jane</span><span class=\"ds-kanban-dot\"></span></div><p class=\"ds-kanban-snippet\">Hello welcome to chatwoot.</p><div class=\"ds-kanban-foot\"><span>#1</span></div></div>",
+      "css": ".ds-kanban-card { display:flex; flex-direction:column; gap:8px; padding:12px; background:#FEFEFE; border:1px solid #EAEAEA; border-radius:8px; cursor:grab; transition:border-color 100ms ease-out; } .ds-kanban-card:hover { border-color:#008069; } .ds-kanban-card-top { display:flex; align-items:center; gap:8px; } .ds-kanban-avatar { width:24px; height:24px; font-size:11px; } .ds-kanban-name { font-family:Inter,sans-serif; font-size:14px; font-weight:500; color:#1C2024; } .ds-kanban-dot { width:6px; height:6px; border-radius:9999px; background:#12A594; margin-left:auto; } .ds-kanban-snippet { margin:0; font-family:Inter,sans-serif; font-size:12px; color:#60646C; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; } .ds-kanban-foot { font-family:Inter,sans-serif; font-size:11px; color:#8B8D98; }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "description": "Standard text input — near-transparent-black wash, brand-green focus outline.",
+      "html": "<label class=\"ds-field-label\" for=\"ds-demo-input\">Nome da etapa</label><input id=\"ds-demo-input\" class=\"ds-input\" type=\"text\" placeholder=\"Nome da etapa\" />",
+      "css": ".ds-field-label { display:block; font-family:Inter,sans-serif; font-size:14px; font-weight:500; color:#1C2024; margin-bottom:4px; } .ds-input { display:block; width:100%; height:40px; padding:0 12px; background:rgba(0,0,0,0.03); border:none; outline:1px solid #EAEAEA; border-radius:8px; font-family:Inter,sans-serif; font-size:14px; color:#1C2024; transition:outline-color 250ms ease-in-out; } .ds-input::placeholder { color:#8B8D98; } .ds-input:hover { outline-color:#CDCED6; } .ds-input:focus-visible { outline:1px solid #008069; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The WhatsApp Familiar",
+    "overview": "Every decision in this system is tested against one question: would this feel native inside WhatsApp Web? This is a Chatwoot fork built for a commercial support team, and the entire reskin exists to erase the feeling of \"enterprise support software.\" The base app stays untouched in structure; what changes is surface: a green accent lifted directly from WhatsApp's own palette, a tan-speckled chat wallpaper behind every conversation, rounded message bubbles with a WhatsApp-shaped tail corner, and delivery ticks that match WhatsApp's own gray-single / gray-double / blue-double-read sequence exactly. This is explicitly not a marketing surface — it's a product register, and the system optimizes for density, clarity of state, and fast repeated actions over visual flourish.",
+    "keyCharacteristics": [
+      "Green (#008069) as the single brand accent, reserved for primary actions and the outgoing-message state.",
+      "A warm, textured wallpaper (#E5DDD5) behind every message thread — the one deliberately decorative surface in an otherwise restrained system.",
+      "Flat, bordered surfaces at rest; shadow appears only when something floats above the page.",
+      "A tight numeric weight scale (420/440/460/520/620) instead of the usual 400/500/600 jumps.",
+      "No hero sections, no marketing scale-up — the largest heading is a page title, not a headline."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "WhatsApp Green is the only saturated color used for interactive intent. Everything else is either semantic (status) or purely atmospheric (wallpaper).", "section": "colors" },
+      { "name": "The No-Display Rule", "body": "This is a product register: there is no marketing-scale display type anywhere in the system.", "section": "typography" },
+      { "name": "The Grounded Rule", "body": "If an element is part of the page's normal flow, it does not get a shadow. Shadow signals content has left the document flow to float above it.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use #008069 (WhatsApp Green) as the only saturated accent for interactive intent — buttons, links, active nav state.",
+      "Do keep outgoing bubbles at #D9FDD3 and incoming bubbles neutral gray/white — the color is the direction cue.",
+      "Do use a 1px Border Hairline (#EAEAEA) or outline to define any surface at rest.",
+      "Do reserve shadow (shadow-md / shadow-lg) exclusively for content floating above the page — dropdowns, modals, popovers, tooltips.",
+      "Do use rounded-2xl (16px) specifically for message bubbles and rounded-lg (8px) for controls/panels.",
+      "Do ship every new UI string in pt_BR alongside en in the same commit."
+    ],
+    "donts": [
+      "Don't build toward the stock Chatwoot look (neutral blue, denser enterprise chrome) — that is this fork's explicit anti-reference.",
+      "Don't add shadow to anything sitting in normal page flow — cards, list rows, message bubbles.",
+      "Don't introduce a marketing-scale display heading (32px+) anywhere in this dashboard.",
+      "Don't over-build empty states or configuration screens for genuinely small entities.",
+      "Don't use border-left/border-right as a colored accent stripe on cards or list items.",
+      "Don't use gradient text anywhere — a single solid ink or brand color, with weight/size for emphasis."
+    ]
+  }
+}

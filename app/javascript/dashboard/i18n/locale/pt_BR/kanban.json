@@ -1,0 +1,32 @@
+{
+  "KANBAN": {
+    "HEADER": "Kanban",
+    "LOADING": "Carregando etapas",
+    "FILTERS": {
+      "ALL_INBOXES": "Todas as caixas de entrada",
+      "ALL_AGENTS": "Todos os atendentes",
+      "ALL_LABELS": "Todas as etiquetas"
+    },
+    "ADD_STAGE": {
+      "BUTTON": "Adicionar etapa",
+      "PLACEHOLDER": "Nome da etapa",
+      "CONFIRM": "Adicionar",
+      "CANCEL": "Cancelar"
+    },
+    "EMPTY_STATE": {
+      "TITLE": "Nenhuma etapa ainda",
+      "DESCRIPTION_ADMIN": "Adicione uma etapa para começar a organizar as conversas em um funil.",
+      "DESCRIPTION_AGENT": "Peça para um administrador configurar as etapas do funil."
+    },
+    "EMPTY_COLUMN": {
+      "TITLE": "Nenhuma conversa",
+      "HINT": "Arraste um cartão para cá"
+    },
+    "CARD": {
+      "UNASSIGNED": "Sem atendente",
+      "MOVE_LABEL": "Mover para etapa",
+      "MOVE_MENU_TITLE": "Mover para"
+    },
+    "MOVE_ERROR": "Não foi possível mover a conversa"
+  }
+}

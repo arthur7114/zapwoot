@@ -1,0 +1,53 @@
+{
+  "PIPELINE_STAGE_MGMT": {
+    "HEADER": "Etapas do Kanban",
+    "HEADER_BTN_TXT": "Adicionar etapa",
+    "LOADING": "Carregando etapas",
+    "DESCRIPTION": "As etapas são as colunas do seu quadro Kanban. Crie, renomeie, reordene ou remova para combinar com o seu funil.",
+    "REORDER_ERROR": "Não foi possível reordenar as etapas",
+    "LIST": {
+      "404": "Não há etapas disponíveis nesta conta."
+    },
+    "FORM": {
+      "NAME": {
+        "LABEL": "Nome da etapa",
+        "PLACEHOLDER": "Nome da etapa",
+        "REQUIRED_ERROR": "O nome da etapa é obrigatório"
+      },
+      "COLOR": {
+        "LABEL": "Cor"
+      },
+      "EDIT": "Editar",
+      "CREATE": "Criar",
+      "DELETE": "Excluir",
+      "CANCEL": "Cancelar"
+    },
+    "ADD": {
+      "TITLE": "Adicionar etapa",
+      "DESC": "As etapas são as colunas do seu quadro Kanban.",
+      "API": {
+        "SUCCESS_MESSAGE": "Etapa adicionada com sucesso",
+        "ERROR_MESSAGE": "Ocorreu um erro, tente novamente"
+      }
+    },
+    "EDIT": {
+      "TITLE": "Editar etapa",
+      "API": {
+        "SUCCESS_MESSAGE": "Etapa atualizada com sucesso",
+        "ERROR_MESSAGE": "Ocorreu um erro, tente novamente"
+      }
+    },
+    "DELETE": {
+      "API": {
+        "SUCCESS_MESSAGE": "Etapa excluída com sucesso",
+        "ERROR_MESSAGE": "Ocorreu um erro, tente novamente"
+      },
+      "CONFIRM": {
+        "TITLE": "Confirmar exclusão",
+        "MESSAGE": "Tem certeza que deseja excluir ",
+        "YES": "Sim, excluir ",
+        "NO": "Não, manter "
+      }
+    }
+  }
+}

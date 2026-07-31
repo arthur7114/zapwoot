@@ -1,0 +1,53 @@
+{
+  "PIPELINE_STAGE_MGMT": {
+    "HEADER": "Kanban stages",
+    "HEADER_BTN_TXT": "Add stage",
+    "LOADING": "Fetching stages",
+    "DESCRIPTION": "Stages are the columns of your Kanban board. Create, rename, reorder, or remove them to match your funnel.",
+    "REORDER_ERROR": "Could not reorder the stages",
+    "LIST": {
+      "404": "There are no stages available in this account."
+    },
+    "FORM": {
+      "NAME": {
+        "LABEL": "Stage name",
+        "PLACEHOLDER": "Stage name",
+        "REQUIRED_ERROR": "Stage name is required"
+      },
+      "COLOR": {
+        "LABEL": "Color"
+      },
+      "EDIT": "Edit",
+      "CREATE": "Create",
+      "DELETE": "Delete",
+      "CANCEL": "Cancel"
+    },
+    "ADD": {
+      "TITLE": "Add stage",
+      "DESC": "Stages are the columns of your Kanban board.",
+      "API": {
+        "SUCCESS_MESSAGE": "Stage added successfully",
+        "ERROR_MESSAGE": "There was an error, please try again"
+      }
+    },
+    "EDIT": {
+      "TITLE": "Edit stage",
+      "API": {
+        "SUCCESS_MESSAGE": "Stage updated successfully",
+        "ERROR_MESSAGE": "There was an error, please try again"
+      }
+    },
+    "DELETE": {
+      "API": {
+        "SUCCESS_MESSAGE": "Stage deleted successfully",
+        "ERROR_MESSAGE": "There was an error, please try again"
+      },
+      "CONFIRM": {
+        "TITLE": "Confirm deletion",
+        "MESSAGE": "Are you sure you want to delete ",
+        "YES": "Yes, delete ",
+        "NO": "No, keep "
+      }
+    }
+  }
+}

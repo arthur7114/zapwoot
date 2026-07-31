@@ -1,0 +1,32 @@
+{
+  "KANBAN": {
+    "HEADER": "Kanban",
+    "LOADING": "Loading stages",
+    "FILTERS": {
+      "ALL_INBOXES": "All inboxes",
+      "ALL_AGENTS": "All agents",
+      "ALL_LABELS": "All labels"
+    },
+    "ADD_STAGE": {
+      "BUTTON": "Add stage",
+      "PLACEHOLDER": "Stage name",
+      "CONFIRM": "Add",
+      "CANCEL": "Cancel"
+    },
+    "EMPTY_STATE": {
+      "TITLE": "No stages yet",
+      "DESCRIPTION_ADMIN": "Add a stage to start organizing conversations into a funnel.",
+      "DESCRIPTION_AGENT": "Ask an administrator to set up the funnel stages."
+    },
+    "EMPTY_COLUMN": {
+      "TITLE": "No conversations",
+      "HINT": "Drag a card here"
+    },
+    "CARD": {
+      "UNASSIGNED": "Unassigned",
+      "MOVE_LABEL": "Move to stage",
+      "MOVE_MENU_TITLE": "Move to"
+    },
+    "MOVE_ERROR": "Could not move the conversation"
+  }
+}
