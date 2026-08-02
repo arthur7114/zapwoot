@@ -64,6 +64,7 @@ const onChange = event => {
       item-key="id"
       tag="div"
       role="list"
+      force-fallback
       class="flex flex-col gap-2 p-2 overflow-y-auto grow min-h-[80px]"
       @change="onChange"
     >

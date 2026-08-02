@@ -31,8 +31,6 @@ import {
 import { useEmitter } from 'dashboard/composables/emitter';
 import { useConversationRequiredAttributes } from 'dashboard/composables/useConversationRequiredAttributes';
 
-import { emitter } from 'shared/helpers/mitt';
-
 import wootConstants from 'dashboard/constants/globals';
 import advancedFilterOptions from './widgets/conversation/advancedFilterItems';
 import filterQueryGenerator from '../helper/filterQueryGenerator.js';
@@ -45,13 +43,8 @@ import {
   isOnParticipatingView,
   isOnUnattendedView,
 } from '../store/modules/conversations/helpers/actionHelpers';
-import {
-  getUserPermissions,
-  filterItemsByPermission,
-} from 'dashboard/helper/permissionsHelper.js';
 import { matchesFilters } from '../store/modules/conversations/helpers/filterHelpers';
 import { CONVERSATION_EVENTS } from '../helper/AnalyticsHelper/events';
-import { ASSIGNEE_TYPE_TAB_PERMISSIONS } from 'dashboard/constants/permissions.js';
 
 const props = defineProps({
   conversationInbox: { type: [String, Number], default: 0 },
@@ -72,7 +65,10 @@ const store = useStore();
 
 const resolveAttributesModalRef = ref(null);
 
-const activeAssigneeTab = ref(wootConstants.ASSIGNEE_TYPE.ME);
+// The assignee scope is fixed to ALL conversations; the visible tabs filter by
+// read/unread instead of by assignee (WhatsApp-first workflow).
+const activeAssigneeTab = ref(wootConstants.ASSIGNEE_TYPE.ALL);
+const activeReadTab = ref('unread');
 const activeStatus = ref(wootConstants.STATUS_TYPE.OPEN);
 const activeSortBy = ref(wootConstants.SORT_BY_TYPE.LAST_ACTIVITY_AT_DESC);
 const showAdvancedFilters = ref(false);
@@ -92,9 +88,7 @@ const advancedFilterTypes = ref(
 
 const currentUser = useMapGetter('getCurrentUser');
 const chatLists = useMapGetter('getFilteredConversations');
-const mineChatsList = useMapGetter('getMineChats');
 const allChatList = useMapGetter('getAllStatusChats');
-const unAssignedChatsList = useMapGetter('getUnAssignedChats');
 const participatingChatsList = useMapGetter('getParticipatingChats');
 const chatListLoading = useMapGetter('getChatListLoadingStatus');
 const activeInbox = useMapGetter('getSelectedInbox');
@@ -106,7 +100,6 @@ const teamsList = useMapGetter('teams/getTeams');
 const inboxesList = useMapGetter('inboxes/getInboxes');
 const campaigns = useMapGetter('campaigns/getAllCampaigns');
 const labels = useMapGetter('labels/getLabels');
-const currentAccountId = useMapGetter('getCurrentAccountId');
 // We can't useFunctionGetter here since it needs to be called on setup?
 const getTeamFn = useMapGetter('teams/getTeam');
 const getConversationById = useMapGetter('getConversationById');
@@ -171,21 +164,7 @@ const currentUserDetails = computed(() => {
   return { id, name };
 });
 
-const userPermissions = computed(() => {
-  return getUserPermissions(currentUser.value, currentAccountId.value);
-});
-
-const assigneeTabItems = computed(() => {
-  return filterItemsByPermission(
-    ASSIGNEE_TYPE_TAB_PERMISSIONS,
-    userPermissions.value,
-    item => item.permissions
-  ).map(({ key, count: countKey }) => ({
-    key,
-    name: t(`CHAT_LIST.ASSIGNEE_TYPE_TABS.${key}`),
-    count: conversationStats.value[countKey] || 0,
-  }));
-});
+const isUnreadConversation = chat => (chat.unread_count || 0) > 0;
 
 const showAssigneeInConversationCard = computed(() => {
   return (
@@ -219,11 +198,10 @@ const conversationCustomAttributes = useFunctionGetter(
   'conversation_attribute'
 );
 
+// Drives pagination (whether to fetch the next page): based on the total number
+// of ALL-scoped conversations, not the read/unread filtered subset.
 const activeAssigneeTabCount = computed(() => {
-  const count = assigneeTabItems.value.find(
-    item => item.key === activeAssigneeTab.value
-  ).count;
-  return count;
+  return conversationStats.value.allCount || 0;
 });
 
 const conversationListPagination = computed(() => {
@@ -257,6 +235,37 @@ const conversationFilters = computed(() => {
     teamId: props.teamId || undefined,
     conversationType: props.conversationType || undefined,
   };
+});
+
+// The full ALL-scoped conversation list (before the read/unread view filter),
+// used both to render the list and to count the read/unread tabs.
+const baseConversationList = computed(() => {
+  if (hasAppliedFiltersOrActiveFolders.value) {
+    return [...chatLists.value];
+  }
+  if (
+    props.conversationType === wootConstants.CONVERSATION_TYPE.PARTICIPATING
+  ) {
+    return [...participatingChatsList.value(conversationFilters.value)];
+  }
+  return [...allChatList.value(conversationFilters.value)];
+});
+
+const assigneeTabItems = computed(() => {
+  const unreadCount =
+    baseConversationList.value.filter(isUnreadConversation).length;
+  return [
+    {
+      key: 'unread',
+      name: t('CHAT_LIST.READ_STATUS_TABS.unread'),
+      count: unreadCount,
+    },
+    {
+      key: 'read',
+      name: t('CHAT_LIST.READ_STATUS_TABS.read'),
+      count: baseConversationList.value.length - unreadCount,
+    },
+  ];
 });
 
 const activeTeam = computed(() => {
@@ -296,18 +305,6 @@ const pageTitle = computed(() => {
   return t('CHAT_LIST.TAB_HEADING');
 });
 
-function filterByAssigneeTab(conversations) {
-  if (activeAssigneeTab.value === wootConstants.ASSIGNEE_TYPE.ME) {
-    return conversations.filter(
-      c => c.meta?.assignee?.id === currentUser.value?.id
-    );
-  }
-  if (activeAssigneeTab.value === wootConstants.ASSIGNEE_TYPE.UNASSIGNED) {
-    return conversations.filter(c => !c.meta?.assignee);
-  }
-  return [...conversations];
-}
-
 function sortByUnreadStatus(conversations) {
   return [...conversations].sort((a, b) => {
     const unreadCountDiff = (b.unread_count || 0) - (a.unread_count || 0);
@@ -318,26 +315,7 @@ function sortByUnreadStatus(conversations) {
 }
 
 const conversationList = computed(() => {
-  let localConversationList = [];
-
-  if (!hasAppliedFiltersOrActiveFolders.value) {
-    const filters = conversationFilters.value;
-    if (
-      props.conversationType === wootConstants.CONVERSATION_TYPE.PARTICIPATING
-    ) {
-      localConversationList = filterByAssigneeTab(
-        participatingChatsList.value(filters)
-      );
-    } else if (activeAssigneeTab.value === 'me') {
-      localConversationList = [...mineChatsList.value(filters)];
-    } else if (activeAssigneeTab.value === 'unassigned') {
-      localConversationList = [...unAssignedChatsList.value(filters)];
-    } else {
-      localConversationList = [...allChatList.value(filters)];
-    }
-  } else {
-    localConversationList = [...chatLists.value];
-  }
+  let localConversationList = [...baseConversationList.value];
 
   if (activeFolder.value) {
     const { payload } = activeFolder.value.query;
@@ -346,11 +324,16 @@ const conversationList = computed(() => {
     });
   }
 
-  if (
-    !hasAppliedFiltersOrActiveFolders.value &&
-    activeSortBy.value === wootConstants.SORT_BY_TYPE.UNREAD
-  ) {
-    localConversationList = sortByUnreadStatus(localConversationList);
+  if (!hasAppliedFiltersOrActiveFolders.value) {
+    localConversationList = localConversationList.filter(conversation =>
+      activeReadTab.value === 'unread'
+        ? isUnreadConversation(conversation)
+        : !isUnreadConversation(conversation)
+    );
+
+    if (activeSortBy.value === wootConstants.SORT_BY_TYPE.UNREAD) {
+      localConversationList = sortByUnreadStatus(localConversationList);
+    }
   }
 
   return localConversationList;
@@ -603,14 +586,10 @@ function loadMoreConversations() {
   }
 }
 
-function updateAssigneeTab(selectedTab) {
-  if (activeAssigneeTab.value !== selectedTab) {
+function updateReadTab(selectedTab) {
+  if (activeReadTab.value !== selectedTab) {
     resetBulkActions();
-    emitter.emit('clearSearchInput');
-    activeAssigneeTab.value = selectedTab;
-    if (!currentPage.value) {
-      fetchConversations();
-    }
+    activeReadTab.value = selectedTab;
   }
 }
 
@@ -684,6 +663,28 @@ async function assignPriority(priority, conversationId = null) {
       })
     );
   });
+}
+
+async function assignPipelineStage(pipelineStageId, conversationId) {
+  const previous =
+    getConversationById.value(conversationId)?.pipeline_stage_id ?? null;
+  store.dispatch('setCurrentChatPipelineStage', {
+    pipelineStageId,
+    conversationId,
+  });
+  try {
+    await store.dispatch('assignPipelineStage', {
+      conversationId,
+      pipelineStageId,
+    });
+    useAlert(t('KANBAN.STAGE.CHANGE_SUCCESS_GENERIC'));
+  } catch (error) {
+    store.dispatch('setCurrentChatPipelineStage', {
+      pipelineStageId: previous,
+      conversationId,
+    });
+    useAlert(t('KANBAN.STAGE.CHANGE_ERROR'));
+  }
 }
 
 async function markAsUnread(conversationId) {
@@ -846,6 +847,7 @@ provide('updateConversationStatus', handleResolveConversation);
 provide('markAsUnread', markAsUnread);
 provide('markAsRead', markAsRead);
 provide('assignPriority', assignPriority);
+provide('assignPipelineStage', assignPipelineStage);
 provide('isConversationSelected', isConversationSelected);
 provide('deleteConversation', handleDelete);
 
@@ -930,9 +932,9 @@ watch(conversationFilters, (newVal, oldVal) => {
     <ChatTypeTabs
       v-if="!hasAppliedFiltersOrActiveFolders"
       :items="assigneeTabItems"
-      :active-tab="activeAssigneeTab"
+      :active-tab="activeReadTab"
       is-compact
-      @chat-tab-change="updateAssigneeTab"
+      @chat-tab-change="updateReadTab"
     />
 
     <p

@@ -1,5 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
+import { emitter } from 'shared/helpers/mitt';
+import { BUS_EVENTS } from 'shared/constants/busEvents';
 import MentionBox from '../mentions/MentionBox.vue';
 
 export default {
@@ -20,6 +22,7 @@ export default {
         label: cannedMessage.short_code,
         key: cannedMessage.short_code,
         description: cannedMessage.content,
+        attachments: cannedMessage.attachments || [],
       }));
     },
   },
@@ -37,6 +40,9 @@ export default {
     },
     handleMentionClick(item = {}) {
       this.$emit('replace', item.description);
+      if (item.attachments?.length) {
+        emitter.emit(BUS_EVENTS.ATTACH_CANNED_RESPONSE_FILES, item.attachments);
+      }
     },
   },
 };

@@ -25,8 +25,11 @@ onMounted(() => {
   }
 });
 
-const insertQuickReply = content => {
-  emitter.emit(BUS_EVENTS.INSERT_INTO_RICH_EDITOR, content);
+const insertQuickReply = item => {
+  emitter.emit(BUS_EVENTS.INSERT_INTO_RICH_EDITOR, item.content);
+  if (item.attachments?.length) {
+    emitter.emit(BUS_EVENTS.ATTACH_CANNED_RESPONSE_FILES, item.attachments);
+  }
   useTrack(CONVERSATION_EVENTS.INSERTED_A_CANNED_RESPONSE);
 };
 </script>
@@ -41,7 +44,7 @@ const insertQuickReply = content => {
       :key="item.id"
       type="button"
       class="inline-flex flex-shrink-0 items-center gap-1 px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap bg-n-teal-3 text-n-teal-11 hover:bg-n-teal-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-n-brand"
-      @click="insertQuickReply(item.content)"
+      @click="insertQuickReply(item)"
     >
       <span class="flex-shrink-0 i-lucide-zap size-3" />
       {{ item.short_code }}

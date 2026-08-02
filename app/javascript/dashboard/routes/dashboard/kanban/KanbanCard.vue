@@ -2,7 +2,9 @@
 import { computed, nextTick, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { vOnClickOutside } from '@vueuse/components';
+import { useMapGetter } from 'dashboard/composables/store';
 import { useDropdownPosition } from 'dashboard/composables/useDropdownPosition';
+import { frontendURL, conversationUrl } from 'dashboard/helper/URLHelper';
 import Avatar from 'dashboard/components-next/avatar/Avatar.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
 import DropdownMenu from 'dashboard/components-next/dropdown-menu/DropdownMenu.vue';
@@ -26,6 +28,17 @@ const props = defineProps({
 const emit = defineEmits(['open', 'move']);
 
 const { t } = useI18n();
+
+const accountId = useMapGetter('getCurrentAccountId');
+
+const conversationPath = computed(() =>
+  frontendURL(
+    conversationUrl({
+      accountId: accountId.value,
+      id: props.conversation.id,
+    })
+  )
+);
 
 const contact = computed(() => props.conversation.meta?.sender || {});
 const assignee = computed(() => props.conversation.meta?.assignee);
@@ -92,13 +105,11 @@ const onMoveAction = ({ value }) => {
 </script>
 
 <template>
-  <div
-    role="button"
-    tabindex="0"
-    class="group flex flex-col gap-2 p-3 bg-n-solid-1 border border-n-weak rounded-lg cursor-grab active:cursor-grabbing hover:border-n-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-n-brand"
-    @click="emit('open')"
-    @keydown.enter.self.prevent="emit('open')"
-    @keydown.space.self.prevent="emit('open')"
+  <a
+    :href="conversationPath"
+    draggable="false"
+    class="group flex flex-col gap-2 p-3 bg-n-solid-1 border border-n-weak rounded-lg cursor-grab active:cursor-grabbing no-underline hover:border-n-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-n-brand"
+    @click.exact.prevent="emit('open')"
   >
     <div class="flex items-center gap-2 min-w-0">
       <Avatar :name="contact.name || ''" :src="contact.thumbnail" :size="24" />
@@ -113,7 +124,7 @@ const onMoveAction = ({ value }) => {
         v-if="moveMenuItems.length"
         ref="triggerRef"
         class="relative flex-shrink-0"
-        @click.stop
+        @click.stop.prevent
       >
         <Button
           icon="i-lucide-ellipsis-vertical"
@@ -157,5 +168,5 @@ const onMoveAction = ({ value }) => {
         </span>
       </div>
     </div>
-  </div>
+  </a>
 </template>

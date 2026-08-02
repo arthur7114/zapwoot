@@ -1,19 +1,16 @@
 <script setup>
 import { computed, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useStore, useMapGetter } from 'dashboard/composables/store';
-import { useAccount } from 'dashboard/composables/useAccount';
 import { useAdmin } from 'dashboard/composables/useAdmin';
 import { useAlert } from 'dashboard/composables';
 import Button from 'dashboard/components-next/button/Button.vue';
 import KanbanColumn from './KanbanColumn.vue';
 import KanbanAddStageForm from './KanbanAddStageForm.vue';
+import KanbanConversationModal from './KanbanConversationModal.vue';
 
 const { t } = useI18n();
 const store = useStore();
-const router = useRouter();
-const { accountScopedRoute } = useAccount();
 const { isAdmin } = useAdmin();
 
 const stages = useMapGetter('pipelineStages/getPipelineStages');
@@ -30,6 +27,7 @@ const selectedAssigneeId = ref('');
 const selectedLabel = ref('');
 const isAddingStage = ref(false);
 const addStageFormRef = ref(null);
+const previewConversationId = ref(null);
 
 const firstStageId = computed(() => stages.value[0]?.id);
 
@@ -67,11 +65,7 @@ const onMove = async ({ conversationId, pipelineStageId }) => {
 };
 
 const onOpenConversation = conversation => {
-  router.push(
-    accountScopedRoute('inbox_conversation', {
-      conversation_id: conversation.id,
-    })
-  );
+  previewConversationId.value = conversation.id;
 };
 
 const confirmAddStage = async title => {
@@ -199,5 +193,11 @@ onMounted(() => {
         @cancel="isAddingStage = false"
       />
     </div>
+
+    <KanbanConversationModal
+      v-if="previewConversationId"
+      :conversation-id="previewConversationId"
+      @close="previewConversationId = null"
+    />
   </div>
 </template>

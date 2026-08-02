@@ -9,6 +9,13 @@
     "SEARCH_PLACEHOLDER": "Search canned responses...",
     "NO_RESULTS": "No canned responses found matching your search",
     "SEARCH_404": "There are no items matching this query.",
+    "ATTACHMENTS": {
+      "LABEL": "Attachments",
+      "UPLOAD_BUTTON": "Add files",
+      "UPLOADING": "Uploading...",
+      "UPLOAD_ERROR": "Could not upload the file, please try again",
+      "REMOVE": "Remove"
+    },
     "LIST": {
       "404": "There are no canned responses available in this account.",
       "TITLE": "Manage canned responses",

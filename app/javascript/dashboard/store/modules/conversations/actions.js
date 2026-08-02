@@ -535,6 +535,28 @@ const actions = {
     commit(types.ASSIGN_PRIORITY, { priority, conversationId });
   },
 
+  assignPipelineStage: async (
+    { dispatch },
+    { conversationId, pipelineStageId }
+  ) => {
+    const response = await ConversationApi.update(conversationId, {
+      pipeline_stage_id: pipelineStageId,
+    });
+    dispatch('setCurrentChatPipelineStage', {
+      pipelineStageId,
+      conversationId,
+    });
+    // Keep the kanban board in sync immediately; the websocket
+    // conversation.updated event that follows is idempotent on top of this.
+    dispatch('kanbanConversations/applyRealtimeConversation', response.data, {
+      root: true,
+    });
+  },
+
+  setCurrentChatPipelineStage({ commit }, { pipelineStageId, conversationId }) {
+    commit(types.ASSIGN_PIPELINE_STAGE, { pipelineStageId, conversationId });
+  },
+
   setContextMenuChatId({ commit }, chatId) {
     commit(types.SET_CONTEXT_MENU_CHAT_ID, chatId);
   },

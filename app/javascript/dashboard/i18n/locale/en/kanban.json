@@ -27,6 +27,20 @@
       "MOVE_LABEL": "Move to stage",
       "MOVE_MENU_TITLE": "Move to"
     },
-    "MOVE_ERROR": "Could not move the conversation"
+    "MOVE_ERROR": "Could not move the conversation",
+    "STAGE": {
+      "TITLE": "Funnel stage",
+      "NONE": "No stage",
+      "BADGE_TOOLTIP": "Stage: {stage}",
+      "CONTEXT_MENU_TITLE": "Change stage",
+      "CHANGE_SUCCESS": "Stage changed to {stage}",
+      "CHANGE_SUCCESS_GENERIC": "Stage updated successfully",
+      "CHANGE_ERROR": "Could not update the stage, please try again"
+    },
+    "PREVIEW": {
+      "OPEN_FULL": "Open full conversation",
+      "LOADING": "Loading conversation",
+      "CLOSE": "Close"
+    }
   }
 }

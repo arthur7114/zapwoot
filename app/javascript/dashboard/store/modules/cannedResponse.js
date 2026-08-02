@@ -2,6 +2,7 @@ import { throwErrorMessage } from 'dashboard/store/utils/api';
 import * as MutationHelpers from 'shared/helpers/vuex/mutationHelpers';
 import * as types from '../mutation-types';
 import CannedResponseAPI from '../../api/cannedResponse';
+import { uploadFile } from 'dashboard/helper/uploadHelper';
 
 const state = {
   records: [],
@@ -77,6 +78,17 @@ const actions = {
       commit(types.default.SET_CANNED_UI_FLAG, { updatingItem: false });
       return throwErrorMessage(error);
     }
+  },
+
+  uploadAttachment: async (_, file) => {
+    const { blobId, fileUrl } = await uploadFile(file);
+    return {
+      blobId,
+      fileUrl,
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    };
   },
 
   deleteCannedResponse: async function deleteCannedResponse({ commit }, id) {

@@ -71,16 +71,14 @@ export default {
         :label="$t('CONVERSATION.SCHEDULE_MESSAGE.CONTENT_LABEL')"
         auto-height
       />
-      <div class="date-picker">
+      <div class="mb-4">
         <DatePicker
           v-model:value="scheduledAt"
           type="datetime"
-          confirm
-          :append-to-body="false"
+          inline
+          input-class="mx-input"
           :clearable="false"
           :editable="false"
-          :confirm-text="$t('CONVERSATION.SCHEDULE_MESSAGE.DATE_CONFIRM')"
-          :placeholder="$t('CONVERSATION.SCHEDULE_MESSAGE.DATE_PLACEHOLDER')"
           :lang="lang"
           :disabled-date="disabledDate"
           :disabled-time="disabledTime"

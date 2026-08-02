@@ -6,6 +6,7 @@ import { useAlert } from 'dashboard/composables';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import Modal from '../../../../components/Modal.vue';
 import WootMessageEditor from 'dashboard/components/widgets/WootWriter/Editor.vue';
+import CannedAttachmentInput from './CannedAttachmentInput.vue';
 
 export default {
   name: 'AddCanned',
@@ -13,6 +14,7 @@ export default {
     NextButton,
     Modal,
     WootMessageEditor,
+    CannedAttachmentInput,
   },
   props: {
     responseContent: {
@@ -31,6 +33,7 @@ export default {
     return {
       shortCode: '',
       content: this.responseContent || '',
+      blobSignedIds: [],
       addCanned: {
         showLoading: false,
         message: '',
@@ -62,6 +65,7 @@ export default {
         .dispatch('createCannedResponse', {
           short_code: this.shortCode,
           content: this.content,
+          blob_signed_ids: this.blobSignedIds,
         })
         .then(() => {
           // Reset Form, Show success message
@@ -117,6 +121,10 @@ export default {
               @blur="v$.content.$touch"
             />
           </div>
+        </div>
+
+        <div class="w-full">
+          <CannedAttachmentInput @update:signed-ids="blobSignedIds = $event" />
         </div>
         <div class="flex flex-row justify-end w-full gap-2 px-0 py-2">
           <NextButton

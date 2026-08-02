@@ -9,6 +9,13 @@
     "SEARCH_PLACEHOLDER": "Pesquisar respostas prontas...",
     "NO_RESULTS": "Nenhuma resposta pronta encontrada correspondente à sua busca",
     "SEARCH_404": "Não há itens correspondentes a esta consulta.",
+    "ATTACHMENTS": {
+      "LABEL": "Anexos",
+      "UPLOAD_BUTTON": "Adicionar arquivos",
+      "UPLOADING": "Enviando...",
+      "UPLOAD_ERROR": "Não foi possível enviar o arquivo, tente novamente",
+      "REMOVE": "Remover"
+    },
     "LIST": {
       "404": "Não há respostas prontas disponíveis nesta conta.",
       "TITLE": "Gerenciar Respostas Prontas",

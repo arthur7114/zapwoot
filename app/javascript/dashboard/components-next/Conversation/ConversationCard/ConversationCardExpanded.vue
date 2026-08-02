@@ -4,6 +4,7 @@ import { getLastMessage } from 'dashboard/helper/conversationHelper';
 import CardAvatar from './CardAvatar.vue';
 import CardContent from './CardContent.vue';
 import CardLabels from './CardLabelsV5.vue';
+import PipelineStageBadge from 'dashboard/components-next/Conversation/PipelineStageBadge.vue';
 import CardPriorityIcon from './CardPriorityIcon.vue';
 import InboxName from 'dashboard/components-next/Conversation/InboxName.vue';
 import Avatar from 'next/avatar/Avatar.vue';
@@ -169,6 +170,10 @@ const selectedModel = computed({
 
     <!-- RIGHT SECTION -->
     <div class="flex items-center justify-end gap-1.5 flex-shrink-0">
+      <div v-if="chat.pipeline_stage_id" class="flex-shrink-0">
+        <PipelineStageBadge :stage-id="chat.pipeline_stage_id" />
+      </div>
+
       <div v-if="showLabelsSection" class="min-w-0 w-full">
         <CardLabels
           :labels="chat.labels"

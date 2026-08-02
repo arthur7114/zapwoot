@@ -19,6 +19,10 @@
       "unassigned": "Não atribuídas",
       "all": "Todos"
     },
+    "READ_STATUS_TABS": {
+      "unread": "Não lidas",
+      "read": "Lidas"
+    },
     "CHAT_STATUS_FILTER_ITEMS": {
       "open": {
         "TEXT": "Abertas"

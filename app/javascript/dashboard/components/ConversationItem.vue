@@ -24,14 +24,12 @@ const store = useStore();
 const selectConversation = inject('selectConversation');
 const deSelectConversation = inject('deSelectConversation');
 const assignAgent = inject('assignAgent');
-const assignTeam = inject('assignTeam');
 const assignLabels = inject('assignLabels');
 const removeLabels = inject('removeLabels');
-const updateConversationStatus = inject('updateConversationStatus');
+const assignPipelineStage = inject('assignPipelineStage');
 const toggleContextMenu = inject('toggleContextMenu');
 const markAsUnread = inject('markAsUnread');
 const markAsRead = inject('markAsRead');
-const assignPriority = inject('assignPriority');
 const isConversationSelected = inject('isConversationSelected');
 const deleteConversation = inject('deleteConversation');
 
@@ -134,11 +132,6 @@ const closeContextMenu = () => {
   contextMenu.value.y = null;
 };
 
-const onUpdateConversation = (status, snoozedUntil) => {
-  closeContextMenu();
-  updateConversationStatus(props.source.id, status, snoozedUntil);
-};
-
 const onAssignAgent = agent => {
   assignAgent(agent, [props.source.id]);
   closeContextMenu();
@@ -152,11 +145,6 @@ const onRemoveLabel = label => {
   removeLabels([label.title], [props.source.id]);
 };
 
-const onAssignTeam = team => {
-  assignTeam(team, props.source.id);
-  closeContextMenu();
-};
-
 const onMarkAsUnread = () => {
   markAsUnread(props.source.id);
   closeContextMenu();
@@ -167,8 +155,8 @@ const onMarkAsRead = () => {
   closeContextMenu();
 };
 
-const onAssignPriority = priority => {
-  assignPriority(priority, props.source.id);
+const onAssignPipelineStage = pipelineStageId => {
+  assignPipelineStage(pipelineStageId, props.source.id);
   closeContextMenu();
 };
 
@@ -222,21 +210,18 @@ const onDeleteConversation = () => {
     @close="closeContextMenu"
   >
     <ConversationContextMenu
-      :status="source.status"
       :inbox-id="inbox.id"
-      :priority="source.priority"
+      :pipeline-stage-id="source.pipeline_stage_id"
       :chat-id="source.id"
       :has-unread-messages="source.unread_count > 0"
       :conversation-labels="source.labels"
       :conversation-url="conversationPath"
-      @update-conversation="onUpdateConversation"
       @assign-agent="onAssignAgent"
       @assign-label="onAssignLabel"
       @remove-label="onRemoveLabel"
-      @assign-team="onAssignTeam"
+      @assign-pipeline-stage="onAssignPipelineStage"
       @mark-as-unread="onMarkAsUnread"
       @mark-as-read="onMarkAsRead"
-      @assign-priority="onAssignPriority"
       @delete-conversation="onDeleteConversation"
       @close="closeContextMenu"
     />

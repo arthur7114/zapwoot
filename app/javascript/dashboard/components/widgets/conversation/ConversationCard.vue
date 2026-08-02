@@ -7,6 +7,7 @@ import MessagePreview from './MessagePreview.vue';
 import InboxName from '../InboxName.vue';
 import TimeAgo from 'dashboard/components/ui/TimeAgo.vue';
 import CardLabels from './conversationCardComponents/CardLabels.vue';
+import PipelineStageBadge from 'dashboard/components-next/Conversation/PipelineStageBadge.vue';
 import CardPriorityIcon from 'dashboard/components-next/Conversation/ConversationCard/CardPriorityIcon.vue';
 import UnreadBadge from 'dashboard/components-next/Conversation/ConversationCard/UnreadBadge.vue';
 import SLACardLabel from './components/SLACardLabel.vue';
@@ -66,8 +67,14 @@ const hasSlaPolicyId = computed(
   () => props.chat?.applied_sla?.id && !props.currentContact?.blocked
 );
 
+const hasPipelineStage = computed(() => !!props.chat.pipeline_stage_id);
+
 const showLabelsSection = computed(() => {
-  return props.chat.labels?.length > 0 || hasSlaPolicyId.value;
+  return (
+    props.chat.labels?.length > 0 ||
+    hasSlaPolicyId.value ||
+    hasPipelineStage.value
+  );
 });
 
 const messagePreviewClass = computed(() => {
@@ -237,8 +244,17 @@ watch(
         :conversation-labels="chat.labels"
         class="mt-0.5 mx-2 mb-0"
       >
-        <template v-if="hasSlaPolicyId" #before>
-          <SLACardLabel :chat="chat" class="ltr:mr-1 rtl:ml-1" />
+        <template v-if="hasSlaPolicyId || hasPipelineStage" #before>
+          <PipelineStageBadge
+            v-if="hasPipelineStage"
+            :stage-id="chat.pipeline_stage_id"
+            class="ltr:mr-1 rtl:ml-1"
+          />
+          <SLACardLabel
+            v-if="hasSlaPolicyId"
+            :chat="chat"
+            class="ltr:mr-1 rtl:ml-1"
+          />
         </template>
       </CardLabels>
     </div>

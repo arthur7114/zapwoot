@@ -10,7 +10,6 @@ import {
 import { picoSearch } from '@scmmishra/pico-search';
 import MenuItem from './menuItem.vue';
 import MenuItemWithSubmenu from './menuItemWithSubmenu.vue';
-import wootConstants from 'dashboard/constants/globals';
 import AgentLoadingPlaceholder from './agentLoadingPlaceholder.vue';
 import NextInput from 'dashboard/components-next/input/Input.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
@@ -18,11 +17,8 @@ import Icon from 'dashboard/components-next/icon/Icon.vue';
 const MENU = {
   MARK_AS_READ: 'mark-as-read',
   MARK_AS_UNREAD: 'mark-as-unread',
-  PRIORITY: 'priority',
-  STATUS: 'status',
-  SNOOZE: 'snooze',
+  PIPELINE_STAGE: 'pipeline-stage',
   AGENT: 'agent',
-  TEAM: 'team',
   LABEL: 'label',
   DELETE: 'delete',
   OPEN_NEW_TAB: 'open-new-tab',
@@ -42,10 +38,6 @@ export default {
       type: Number,
       default: null,
     },
-    status: {
-      type: String,
-      default: '',
-    },
     hasUnreadMessages: {
       type: Boolean,
       default: false,
@@ -54,8 +46,8 @@ export default {
       type: Number,
       default: null,
     },
-    priority: {
-      type: String,
+    pipelineStageId: {
+      type: [Number, String],
       default: null,
     },
     conversationLabels: {
@@ -72,12 +64,10 @@ export default {
     },
   },
   emits: [
-    'updateConversation',
-    'assignPriority',
+    'assignPipelineStage',
     'markAsUnread',
     'markAsRead',
     'assignAgent',
-    'assignTeam',
     'assignLabel',
     'removeLabel',
     'deleteConversation',
@@ -93,7 +83,6 @@ export default {
     return {
       MENU,
       labelSearchQuery: '',
-      STATUS_TYPE: wootConstants.STATUS_TYPE,
       readOption: {
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.MARK_AS_READ'),
         icon: 'mail',
@@ -102,54 +91,10 @@ export default {
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.MARK_AS_UNREAD'),
         icon: 'mail-unread',
       },
-      statusMenuConfig: [
-        {
-          key: wootConstants.STATUS_TYPE.RESOLVED,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.RESOLVED'),
-          icon: 'checkmark',
-        },
-        {
-          key: wootConstants.STATUS_TYPE.OPEN,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.REOPEN'),
-          icon: 'arrow-redo',
-        },
-        {
-          key: wootConstants.STATUS_TYPE.PENDING,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.PENDING'),
-          icon: 'book-clock',
-        },
-      ],
-      snoozeOption: {
-        key: wootConstants.STATUS_TYPE.SNOOZED,
-        label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.SNOOZE.TITLE'),
-        icon: 'snooze',
-      },
-      priorityConfig: {
-        key: MENU.PRIORITY,
-        label: this.$t('CONVERSATION.PRIORITY.TITLE'),
-        icon: 'warning',
-        options: [
-          {
-            label: this.$t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
-            key: null,
-          },
-          {
-            label: this.$t('CONVERSATION.PRIORITY.OPTIONS.URGENT'),
-            key: 'urgent',
-          },
-          {
-            label: this.$t('CONVERSATION.PRIORITY.OPTIONS.HIGH'),
-            key: 'high',
-          },
-          {
-            label: this.$t('CONVERSATION.PRIORITY.OPTIONS.MEDIUM'),
-            key: 'medium',
-          },
-          {
-            label: this.$t('CONVERSATION.PRIORITY.OPTIONS.LOW'),
-            key: 'low',
-          },
-        ].filter(item => item.key !== this.priority),
+      stageMenuConfig: {
+        key: MENU.PIPELINE_STAGE,
+        icon: 'arrow-swap',
+        label: this.$t('KANBAN.STAGE.CONTEXT_MENU_TITLE'),
       },
       labelMenuConfig: {
         key: MENU.LABEL,
@@ -160,11 +105,6 @@ export default {
         key: MENU.AGENT,
         icon: 'person-add',
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.ASSIGN_AGENT'),
-      },
-      teamMenuConfig: {
-        key: MENU.TEAM,
-        icon: 'people-team-add',
-        label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.ASSIGN_TEAM'),
       },
       deleteOption: {
         key: MENU.DELETE,
@@ -186,7 +126,7 @@ export default {
   computed: {
     ...mapGetters({
       labels: 'labels/getLabels',
-      teams: 'teams/getTeams',
+      pipelineStages: 'pipelineStages/getPipelineStages',
       assignableAgentsUiFlags: 'inboxAssignableAgents/getUIFlags',
       currentUser: 'getCurrentUser',
       currentAccountId: 'getCurrentAccountId',
@@ -218,10 +158,6 @@ export default {
         ...this.filteredAgentOnAvailability,
       ];
     },
-    showSnooze() {
-      // Don't show snooze if the conversation is already snoozed/resolved/pending
-      return this.status === wootConstants.STATUS_TYPE.OPEN;
-    },
     filteredLabels() {
       const labels = this.labelSearchQuery
         ? picoSearch(this.labels, this.labelSearchQuery, ['title'])
@@ -238,17 +174,6 @@ export default {
     isAllowed(keys) {
       if (!this.allowedOptions.length) return true;
       return keys.some(key => this.allowedOptions.includes(key));
-    },
-    toggleStatus(status, snoozedUntil) {
-      this.$emit('updateConversation', status, snoozedUntil);
-    },
-    async snoozeConversation() {
-      await this.$store.dispatch('setContextMenuChatId', this.chatId);
-      const ninja = document.querySelector('ninja-keys');
-      ninja.open({ parent: 'snooze_conversation' });
-    },
-    assignPriority(priority) {
-      this.$emit('assignPriority', priority);
     },
     deleteConversation() {
       this.$emit('deleteConversation', this.chatId);
@@ -271,11 +196,6 @@ export default {
         // error
       }
     },
-    show(key) {
-      // If the conversation status is same as the action, then don't display the option
-      // i.e.: Don't show an option to resolve if the conversation is already resolved.
-      return this.status !== key;
-    },
     generateMenuLabelConfig(option, type = 'text') {
       return {
         key: option.id,
@@ -286,7 +206,6 @@ export default {
         ...(type === 'text' && { label: option.label }),
         ...(type === 'label' && { label: option.title }),
         ...(type === 'agent' && { label: option.name }),
-        ...(type === 'team' && { label: option.name }),
       };
     },
   },
@@ -312,36 +231,21 @@ export default {
       />
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
     </template>
-    <template v-if="isAllowed([MENU.STATUS, MENU.SNOOZE])">
-      <template v-for="option in statusMenuConfig">
-        <MenuItem
-          v-if="show(option.key) && isAllowed([MENU.STATUS])"
-          :key="option.key"
-          :option="option"
-          variant="icon"
-          @click.stop="toggleStatus(option.key, null)"
-        />
-      </template>
-      <MenuItem
-        v-if="showSnooze && isAllowed([MENU.SNOOZE])"
-        :option="snoozeOption"
-        variant="icon"
-        @click.stop="snoozeConversation()"
-      />
-      <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
-    </template>
-    <template
-      v-if="isAllowed([MENU.PRIORITY, MENU.LABEL, MENU.AGENT, MENU.TEAM])"
-    >
+    <template v-if="isAllowed([MENU.PIPELINE_STAGE, MENU.LABEL, MENU.AGENT])">
       <MenuItemWithSubmenu
-        v-if="isAllowed([MENU.PRIORITY])"
-        :option="priorityConfig"
+        v-if="isAllowed([MENU.PIPELINE_STAGE])"
+        :option="stageMenuConfig"
+        :sub-menu-available="!!pipelineStages.length"
       >
         <MenuItem
-          v-for="(option, i) in priorityConfig.options"
-          :key="i"
-          :option="option"
-          @click.stop="assignPriority(option.key)"
+          v-for="stage in pipelineStages"
+          :key="stage.id"
+          :option="{ key: stage.id, label: stage.title, color: stage.color }"
+          :variant="stage.id === pipelineStageId ? 'label-assigned' : 'label'"
+          @click.stop="
+            stage.id !== pipelineStageId &&
+              $emit('assignPipelineStage', stage.id)
+          "
         />
       </MenuItemWithSubmenu>
       <MenuItemWithSubmenu
@@ -408,18 +312,6 @@ export default {
             @click.stop="$emit('assignAgent', agent)"
           />
         </template>
-      </MenuItemWithSubmenu>
-      <MenuItemWithSubmenu
-        v-if="isAllowed([MENU.TEAM])"
-        :option="teamMenuConfig"
-        :sub-menu-available="!!teams.length"
-      >
-        <MenuItem
-          v-for="team in teams"
-          :key="team.id"
-          :option="generateMenuLabelConfig(team, 'team')"
-          @click.stop="$emit('assignTeam', team)"
-        />
       </MenuItemWithSubmenu>
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
     </template>

@@ -134,6 +134,10 @@ export const mutations = {
     const [chat] = _state.allConversations.filter(c => c.id === conversationId);
     chat.priority = priority;
   },
+  [types.ASSIGN_PIPELINE_STAGE](_state, { pipelineStageId, conversationId }) {
+    const chat = _state.allConversations.find(c => c.id === conversationId);
+    if (chat) chat.pipeline_stage_id = pipelineStageId;
+  },
 
   [types.UPDATE_CONVERSATION_CUSTOM_ATTRIBUTES](
     _state,

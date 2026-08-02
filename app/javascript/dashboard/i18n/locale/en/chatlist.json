@@ -19,6 +19,10 @@
       "unassigned": "Unassigned",
       "all": "All"
     },
+    "READ_STATUS_TABS": {
+      "unread": "Unread",
+      "read": "Read"
+    },
     "CHAT_STATUS_FILTER_ITEMS": {
       "open": {
         "TEXT": "Open"

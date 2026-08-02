@@ -153,7 +153,6 @@ export default {
       messageSignature: 'getMessageSignature',
       currentUser: 'getCurrentUser',
       lastEmail: 'getLastEmailInSelectedChat',
-      globalConfig: 'globalConfig/get',
     }),
     currentContact() {
       const senderId = this.currentChat?.meta?.sender?.id;
@@ -541,6 +540,7 @@ export default {
       this.onNewConversationModalActive
     );
     emitter.on(BUS_EVENTS.INSERT_INTO_NORMAL_EDITOR, this.addIntoEditor);
+    emitter.on(BUS_EVENTS.ATTACH_CANNED_RESPONSE_FILES, this.attachCannedFiles);
     emitter.on(CMD_AI_ASSIST, this.executeCopilotAction);
   },
   unmounted() {
@@ -551,6 +551,10 @@ export default {
     emitter.off(
       BUS_EVENTS.NEW_CONVERSATION_MODAL,
       this.onNewConversationModalActive
+    );
+    emitter.off(
+      BUS_EVENTS.ATTACH_CANNED_RESPONSE_FILES,
+      this.attachCannedFiles
     );
     emitter.off(CMD_AI_ASSIST, this.executeCopilotAction);
   },
@@ -1095,6 +1099,27 @@ export default {
         });
       };
     },
+    attachCannedFiles(attachments = []) {
+      // Ignore the event when a new-conversation modal ReplyBox is active,
+      // and on channels that don't support attachments.
+      if (this.newConversationModalActive) return;
+      if (!this.showFileUpload && !this.isOnPrivateNote) return;
+
+      attachments.forEach(attachment => {
+        this.attachedFiles.push({
+          currentChatId: this.currentChat.id,
+          resource: {
+            filename: attachment.filename,
+            content_type: attachment.file_type,
+            byte_size: attachment.byte_size,
+          },
+          isPrivate: this.isPrivate,
+          thumb: attachment.file_url,
+          blobSignedId: attachment.blob_signed_id,
+          isVoiceMessage: false,
+        });
+      });
+    },
     removeAttachment(attachments) {
       this.attachedFiles = attachments;
     },
@@ -1118,9 +1143,10 @@ export default {
         let caption =
           this.isAnInstagramChannel || this.isATiktokChannel ? '' : message;
         this.attachedFiles.forEach(attachment => {
-          const attachedFile = this.globalConfig.directUploadsEnabled
-            ? attachment.blobSignedId
-            : attachment.resource.file;
+          // Prefer the signed blob id (present for direct uploads and for
+          // canned-response attachments already stored on the server).
+          const attachedFile =
+            attachment.blobSignedId || attachment.resource.file;
           let attachmentPayload = {
             conversationId: this.currentChat.id,
             files: [attachedFile],
@@ -1175,13 +1201,13 @@ export default {
       if (this.attachedFiles && this.attachedFiles.length) {
         messagePayload.files = [];
         this.attachedFiles.forEach(attachment => {
-          if (this.globalConfig.directUploadsEnabled) {
-            messagePayload.files.push(attachment.blobSignedId);
-            if (attachment.isVoiceMessage) {
-              messagePayload.isVoiceMessage = true;
-            }
-          } else {
-            messagePayload.files.push(attachment.resource.file);
+          // Prefer the signed blob id (present for direct uploads and for
+          // canned-response attachments already stored on the server).
+          messagePayload.files.push(
+            attachment.blobSignedId || attachment.resource.file
+          );
+          if (attachment.isVoiceMessage) {
+            messagePayload.isVoiceMessage = true;
           }
         });
       }

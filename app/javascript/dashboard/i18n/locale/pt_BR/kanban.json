@@ -27,6 +27,20 @@
       "MOVE_LABEL": "Mover para etapa",
       "MOVE_MENU_TITLE": "Mover para"
     },
-    "MOVE_ERROR": "Não foi possível mover a conversa"
+    "MOVE_ERROR": "Não foi possível mover a conversa",
+    "STAGE": {
+      "TITLE": "Etapa do funil",
+      "NONE": "Sem etapa",
+      "BADGE_TOOLTIP": "Etapa: {stage}",
+      "CONTEXT_MENU_TITLE": "Alterar etapa",
+      "CHANGE_SUCCESS": "Etapa alterada para {stage}",
+      "CHANGE_SUCCESS_GENERIC": "Etapa atualizada com sucesso",
+      "CHANGE_ERROR": "Não foi possível atualizar a etapa, tente novamente"
+    },
+    "PREVIEW": {
+      "OPEN_FULL": "Abrir conversa completa",
+      "LOADING": "Carregando conversa",
+      "CLOSE": "Fechar"
+    }
   }
 }

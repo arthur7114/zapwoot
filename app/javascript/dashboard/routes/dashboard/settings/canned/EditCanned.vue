@@ -6,17 +6,20 @@ import { useAlert } from 'dashboard/composables';
 import WootMessageEditor from 'dashboard/components/widgets/WootWriter/Editor.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import Modal from '../../../../components/Modal.vue';
+import CannedAttachmentInput from './CannedAttachmentInput.vue';
 
 export default {
   components: {
     NextButton,
     Modal,
     WootMessageEditor,
+    CannedAttachmentInput,
   },
   props: {
     id: { type: Number, default: null },
     edcontent: { type: String, default: '' },
     edshortCode: { type: String, default: '' },
+    edattachments: { type: Array, default: () => [] },
     onClose: { type: Function, default: () => {} },
   },
   setup() {
@@ -30,6 +33,8 @@ export default {
       },
       shortCode: this.edshortCode,
       content: this.edcontent,
+      blobSignedIds: [],
+      deletedAttachmentIds: [],
       show: true,
     };
   },
@@ -67,6 +72,8 @@ export default {
           id: this.id,
           short_code: this.shortCode,
           content: this.content,
+          blob_signed_ids: this.blobSignedIds,
+          deleted_attachment_ids: this.deletedAttachmentIds,
         })
         .then(() => {
           // Reset Form, Show success message
@@ -121,6 +128,14 @@ export default {
               @blur="v$.content.$touch"
             />
           </div>
+        </div>
+
+        <div class="w-full">
+          <CannedAttachmentInput
+            :existing-attachments="edattachments"
+            @update:signed-ids="blobSignedIds = $event"
+            @update:deleted-ids="deletedAttachmentIds = $event"
+          />
         </div>
         <div class="flex flex-row justify-end w-full gap-2 px-0 py-2">
           <NextButton

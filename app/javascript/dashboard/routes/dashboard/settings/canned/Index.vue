@@ -212,8 +212,17 @@ const tableHeaders = computed(() => {
             <template #default>
               <BaseTableCell class="max-w-0">
                 <div class="flex flex-col gap-2 min-w-0">
-                  <span class="text-heading-3 text-n-slate-12 truncate block">
-                    {{ cannedItem.short_code }}
+                  <span
+                    class="flex items-center gap-1 text-heading-3 text-n-slate-12 truncate"
+                  >
+                    <span class="truncate">{{ cannedItem.short_code }}</span>
+                    <span
+                      v-if="cannedItem.attachments?.length"
+                      class="flex-shrink-0 flex items-center gap-0.5 text-n-slate-10"
+                    >
+                      <span class="i-lucide-paperclip size-3.5" />
+                      {{ cannedItem.attachments.length }}
+                    </span>
                   </span>
                   <p class="text-body-main text-n-slate-11 line-clamp-5">
                     {{ getPlainText(cannedItem.content) }}
@@ -256,6 +265,7 @@ const tableHeaders = computed(() => {
         :id="activeResponse.id"
         :edshort-code="activeResponse.short_code"
         :edcontent="activeResponse.content"
+        :edattachments="activeResponse.attachments || []"
         :on-close="hideEditPopup"
       />
     </woot-modal>
