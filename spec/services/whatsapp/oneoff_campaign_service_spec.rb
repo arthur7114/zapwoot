@@ -221,6 +221,62 @@ describe Whatsapp::OneoffCampaignService do
       end
     end
 
+    context 'when audience includes pipeline stages' do
+      let(:stage) { create(:pipeline_stage, account: account) }
+      let!(:contact_in_stage) { create(:contact, account: account, phone_number: '+15551230001') }
+      let!(:contact_outside_stage) { create(:contact, account: account, phone_number: '+15551230002') }
+
+      before do
+        conversation = create(:conversation, account: account, inbox: whatsapp_inbox,
+                                             contact: contact_in_stage)
+        conversation.update!(pipeline_stage_id: stage.id)
+        campaign.update!(audience: [{ type: 'PipelineStage', id: stage.id }])
+      end
+
+      it 'sends template only to contacts with a conversation currently in the stage' do
+        expect(whatsapp_channel).to receive(:send_template)
+          .with(contact_in_stage.phone_number, anything, nil).once
+        expect(whatsapp_channel).not_to receive(:send_template)
+          .with(contact_outside_stage.phone_number, anything, nil)
+
+        described_class.new(campaign: campaign).perform
+      end
+    end
+
+    context 'when audience includes labels and pipeline stages' do
+      let(:stage) { create(:pipeline_stage, account: account) }
+      let!(:contact_with_both) { create(:contact, account: account, phone_number: '+15551230003') }
+      let!(:contact_label_only) { create(:contact, account: account, phone_number: '+15551230004') }
+      let!(:contact_stage_only) { create(:contact, account: account, phone_number: '+15551230005') }
+
+      before do
+        contact_with_both.update_labels([label1.title])
+        contact_label_only.update_labels([label1.title])
+
+        [contact_with_both, contact_stage_only].each do |contact|
+          conversation = create(:conversation, account: account, inbox: whatsapp_inbox,
+                                               contact: contact)
+          conversation.update!(pipeline_stage_id: stage.id)
+        end
+
+        campaign.update!(audience: [
+                           { type: 'Label', id: label1.id },
+                           { type: 'PipelineStage', id: stage.id }
+                         ])
+      end
+
+      it 'sends only to contacts matching label AND stage' do
+        expect(whatsapp_channel).to receive(:send_template)
+          .with(contact_with_both.phone_number, anything, nil).once
+        expect(whatsapp_channel).not_to receive(:send_template)
+          .with(contact_label_only.phone_number, anything, nil)
+        expect(whatsapp_channel).not_to receive(:send_template)
+          .with(contact_stage_only.phone_number, anything, nil)
+
+        described_class.new(campaign: campaign).perform
+      end
+    end
+
     context 'when template_params is missing' do
       let(:template_params) { nil }
 

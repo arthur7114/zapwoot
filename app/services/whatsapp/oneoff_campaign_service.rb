@@ -3,7 +3,7 @@ class Whatsapp::OneoffCampaignService
 
   def perform
     validate_campaign!
-    process_audience(extract_audience_labels)
+    process_audience
     campaign.completed!
   end
 
@@ -39,9 +39,31 @@ class Whatsapp::OneoffCampaignService
     validate_feature_flag!
   end
 
-  def extract_audience_labels
-    audience_label_ids = campaign.audience.select { |audience| audience['type'] == 'Label' }.pluck('id')
-    campaign.account.labels.where(id: audience_label_ids).pluck(:title)
+  def audience_ids_of(type)
+    campaign.audience.select { |audience| audience['type'] == type }.pluck('id')
+  end
+
+  def audience_label_titles
+    campaign.account.labels.where(id: audience_ids_of('Label')).pluck(:title)
+  end
+
+  # Labels combine with OR between themselves; pipeline stages restrict the set
+  # further (label AND stage) because a campaign aimed at a funnel stage should
+  # not leak to contacts outside that stage.
+  def audience_contacts
+    scope = campaign.account.contacts
+
+    labels = audience_label_titles
+    scope = scope.tagged_with(labels, any: true) if labels.present?
+
+    stage_ids = audience_ids_of('PipelineStage')
+    if stage_ids.present?
+      scope = scope.where(
+        id: campaign.account.conversations.where(pipeline_stage_id: stage_ids).select(:contact_id)
+      )
+    end
+
+    scope
   end
 
   def process_contact(contact)
@@ -63,8 +85,8 @@ class Whatsapp::OneoffCampaignService
     send_whatsapp_template_message(to: contact.phone_number, template_params: processed_template_params)
   end
 
-  def process_audience(audience_labels)
-    contacts = campaign.account.contacts.tagged_with(audience_labels, any: true)
+  def process_audience
+    contacts = audience_contacts
     Rails.logger.info "Processing #{contacts.count} contacts for campaign #{campaign.id}"
 
     contacts.each { |contact| process_contact(contact) }
