@@ -22,6 +22,7 @@ const formState = {
   getFilteredWhatsAppTemplates: useMapGetter(
     'inboxes/getFilteredWhatsAppTemplates'
   ),
+  pipelineStages: useMapGetter('pipelineStages/getPipelineStages'),
 };
 
 const initialState = {
@@ -30,6 +31,7 @@ const initialState = {
   templateId: null,
   scheduledAt: null,
   selectedAudience: [],
+  selectedStages: [],
 };
 
 const state = reactive({ ...initialState });
@@ -40,10 +42,19 @@ const rules = {
   inboxId: { required },
   templateId: { required },
   scheduledAt: { required },
-  selectedAudience: { required },
 };
 
 const v$ = useVuelidate(rules, state);
+
+const showAudienceError = ref(false);
+
+const hasAudience = computed(
+  () => state.selectedAudience.length > 0 || state.selectedStages.length > 0
+);
+
+watch(hasAudience, valid => {
+  if (valid) showAudienceError.value = false;
+});
 
 const isCreating = computed(() => formState.uiFlags.value.isCreating);
 
@@ -62,6 +73,10 @@ const mapToOptions = (items, valueKey, labelKey) =>
 
 const audienceList = computed(() =>
   mapToOptions(formState.labels.value, 'id', 'title')
+);
+
+const stageList = computed(() =>
+  mapToOptions(formState.pipelineStages.value, 'id', 'title')
 );
 
 const inboxOptions = computed(() =>
@@ -101,7 +116,9 @@ const formErrors = computed(() => ({
   inbox: getErrorMessage('inboxId', 'INBOX'),
   template: getErrorMessage('templateId', 'TEMPLATE'),
   scheduledAt: getErrorMessage('scheduledAt', 'SCHEDULED_AT'),
-  audience: getErrorMessage('selectedAudience', 'AUDIENCE'),
+  audience: showAudienceError.value
+    ? t('CAMPAIGN.WHATSAPP.CREATE.FORM.STAGES.ERROR')
+    : '',
 }));
 
 const hasRequiredTemplateParams = computed(() => {
@@ -109,7 +126,8 @@ const hasRequiredTemplateParams = computed(() => {
 });
 
 const isSubmitDisabled = computed(
-  () => v$.value.$invalid || !hasRequiredTemplateParams.value
+  () =>
+    v$.value.$invalid || !hasAudience.value || !hasRequiredTemplateParams.value
 );
 
 const formatToUTCString = localDateTime =>
@@ -145,16 +163,22 @@ const prepareCampaignDetails = () => {
     template_params: templateParams,
     inbox_id: state.inboxId,
     scheduled_at: formatToUTCString(state.scheduledAt),
-    audience: state.selectedAudience?.map(id => ({
-      id,
-      type: 'Label',
-    })),
+    audience: [
+      ...(state.selectedAudience?.map(id => ({ id, type: 'Label' })) ?? []),
+      ...(state.selectedStages?.map(id => ({ id, type: 'PipelineStage' })) ??
+        []),
+    ],
   };
 };
 
 const handleSubmit = async () => {
   const isFormValid = await v$.value.$validate();
   if (!isFormValid) return;
+
+  if (!hasAudience.value) {
+    showAudienceError.value = true;
+    return;
+  }
 
   emit('submit', prepareCampaignDetails());
   resetState();
@@ -229,6 +253,21 @@ watch(
         :options="audienceList"
         :label="t('CAMPAIGN.WHATSAPP.CREATE.FORM.AUDIENCE.LABEL')"
         :placeholder="t('CAMPAIGN.WHATSAPP.CREATE.FORM.AUDIENCE.PLACEHOLDER')"
+        :has-error="!!formErrors.audience"
+        :message="formErrors.audience"
+        class="[&>div>button]:bg-n-alpha-black2"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="stages" class="mb-0.5 text-sm font-medium text-n-slate-12">
+        {{ t('CAMPAIGN.WHATSAPP.CREATE.FORM.STAGES.LABEL') }}
+      </label>
+      <TagMultiSelectComboBox
+        v-model="state.selectedStages"
+        :options="stageList"
+        :label="t('CAMPAIGN.WHATSAPP.CREATE.FORM.STAGES.LABEL')"
+        :placeholder="t('CAMPAIGN.WHATSAPP.CREATE.FORM.STAGES.PLACEHOLDER')"
         :has-error="!!formErrors.audience"
         :message="formErrors.audience"
         class="[&>div>button]:bg-n-alpha-black2"

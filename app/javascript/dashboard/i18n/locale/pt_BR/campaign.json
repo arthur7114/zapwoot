@@ -187,6 +187,11 @@
             "PLACEHOLDER": "Selecionar etiquetas dos clientes",
             "ERROR": "Público é necessário"
           },
+          "STAGES": {
+            "LABEL": "Etapas do kanban",
+            "PLACEHOLDER": "Selecione as etapas",
+            "ERROR": "Selecione ao menos uma etiqueta ou etapa"
+          },
           "SCHEDULED_AT": {
             "LABEL": "Horário agendado",
             "PLACEHOLDER": "Por favor insira a hora",

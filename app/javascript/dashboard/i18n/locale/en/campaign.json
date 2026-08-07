@@ -187,6 +187,11 @@
             "PLACEHOLDER": "Select the customer labels",
             "ERROR": "Audience is required"
           },
+          "STAGES": {
+            "LABEL": "Kanban stages",
+            "PLACEHOLDER": "Select stages",
+            "ERROR": "Select at least one label or stage"
+          },
           "SCHEDULED_AT": {
             "LABEL": "Scheduled time",
             "PLACEHOLDER": "Please select the time",
