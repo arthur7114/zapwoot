@@ -2,14 +2,9 @@ import { computed } from 'vue';
 import { useStore, useStoreGetters } from 'dashboard/composables/store';
 
 export const DEFAULT_CONVERSATION_SIDEBAR_ITEMS_ORDER = Object.freeze([
-  { name: 'conversation_actions' },
   { name: 'macros' },
-  { name: 'conversation_info' },
-  { name: 'contact_attributes' },
   { name: 'contact_notes' },
   { name: 'shared_files' },
-  { name: 'previous_conversation' },
-  { name: 'conversation_participants' },
   { name: 'linear_issues' },
   { name: 'shopify_orders' },
 ]);
