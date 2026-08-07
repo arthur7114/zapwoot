@@ -51,12 +51,12 @@ class Whatsapp::OneoffCampaignService
   # further (label AND stage) because a campaign aimed at a funnel stage should
   # not leak to contacts outside that stage.
   def audience_contacts
-    scope = campaign.account.contacts
-
     labels = audience_label_titles
-    scope = scope.tagged_with(labels, any: true) if labels.present?
-
     stage_ids = audience_ids_of('PipelineStage')
+    return campaign.account.contacts.none if labels.blank? && stage_ids.blank?
+
+    scope = campaign.account.contacts
+    scope = scope.tagged_with(labels, any: true) if labels.present?
     if stage_ids.present?
       scope = scope.where(
         id: campaign.account.conversations.where(pipeline_stage_id: stage_ids).select(:contact_id)

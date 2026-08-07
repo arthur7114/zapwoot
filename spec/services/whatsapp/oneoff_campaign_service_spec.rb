@@ -277,6 +277,26 @@ describe Whatsapp::OneoffCampaignService do
       end
     end
 
+    context 'when audience is empty or unresolvable' do
+      before do
+        campaign.update!(audience: [])
+      end
+
+      it 'does not send the template to any contact' do
+        create(:contact, :with_phone_number, account: account)
+
+        expect(whatsapp_channel).not_to receive(:send_template)
+
+        described_class.new(campaign: campaign).perform
+      end
+
+      it 'marks the campaign as completed' do
+        described_class.new(campaign: campaign).perform
+
+        expect(campaign.reload.completed?).to be true
+      end
+    end
+
     context 'when template_params is missing' do
       let(:template_params) { nil }
 
