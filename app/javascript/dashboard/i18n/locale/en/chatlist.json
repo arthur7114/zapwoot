@@ -20,6 +20,7 @@
       "all": "All"
     },
     "READ_STATUS_TABS": {
+      "all": "All",
       "unread": "Unread",
       "read": "Read"
     },

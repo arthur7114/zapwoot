@@ -68,7 +68,7 @@ const resolveAttributesModalRef = ref(null);
 // The assignee scope is fixed to ALL conversations; the visible tabs filter by
 // read/unread instead of by assignee (WhatsApp-first workflow).
 const activeAssigneeTab = ref(wootConstants.ASSIGNEE_TYPE.ALL);
-const activeReadTab = ref('unread');
+const activeReadTab = ref('all');
 const activeStatus = ref(wootConstants.STATUS_TYPE.OPEN);
 const activeSortBy = ref(wootConstants.SORT_BY_TYPE.LAST_ACTIVITY_AT_DESC);
 const showAdvancedFilters = ref(false);
@@ -256,6 +256,11 @@ const assigneeTabItems = computed(() => {
     baseConversationList.value.filter(isUnreadConversation).length;
   return [
     {
+      key: 'all',
+      name: t('CHAT_LIST.READ_STATUS_TABS.all'),
+      count: baseConversationList.value.length,
+    },
+    {
       key: 'unread',
       name: t('CHAT_LIST.READ_STATUS_TABS.unread'),
       count: unreadCount,
@@ -325,11 +330,13 @@ const conversationList = computed(() => {
   }
 
   if (!hasAppliedFiltersOrActiveFolders.value) {
-    localConversationList = localConversationList.filter(conversation =>
-      activeReadTab.value === 'unread'
-        ? isUnreadConversation(conversation)
-        : !isUnreadConversation(conversation)
-    );
+    if (activeReadTab.value !== 'all') {
+      localConversationList = localConversationList.filter(conversation =>
+        activeReadTab.value === 'unread'
+          ? isUnreadConversation(conversation)
+          : !isUnreadConversation(conversation)
+      );
+    }
 
     if (activeSortBy.value === wootConstants.SORT_BY_TYPE.UNREAD) {
       localConversationList = sortByUnreadStatus(localConversationList);
