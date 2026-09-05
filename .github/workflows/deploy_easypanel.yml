@@ -1,0 +1,53 @@
+name: Deploy to Easypanel
+
+# Pushing to main is the deploy trigger, so nobody has to open the panel.
+# Both services run the same image: chatwoot serves the web app, chatwoot-sidekiq
+# runs the workers, including TriggerScheduledItemsJob. Deploying only one leaves
+# the other on stale code.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-easypanel
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      # Sequential: two simultaneous docker builds on the same host starve each other.
+      max-parallel: 1
+      matrix:
+        service: [chatwoot, chatwoot-sidekiq]
+    steps:
+      - name: Trigger ${{ matrix.service }}
+        env:
+          PANEL: ${{ secrets.EASYPANEL_URL }}
+          TOKEN: ${{ secrets.EASYPANEL_TOKEN }}
+          PROJECT: ${{ vars.EASYPANEL_PROJECT || 'ambient1' }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${TOKEN:-}" ]; then
+            echo "::error::EASYPANEL_TOKEN is not set. Add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          response=$(mktemp)
+          status=$(curl -sS -o "$response" -w '%{http_code}' \
+            -X POST "${PANEL%/}/api/trpc/services.app.deployService" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H 'Content-Type: application/json' \
+            -d "{\"json\":{\"projectName\":\"${PROJECT}\",\"serviceName\":\"${{ matrix.service }}\"}}")
+
+          echo "HTTP ${status}"
+          cat "$response"
+          echo
+
+          if [ "$status" -ge 400 ]; then
+            echo "::error::Easypanel refused the deploy for ${{ matrix.service }} (HTTP ${status})."
+            exit 1
+          fi
