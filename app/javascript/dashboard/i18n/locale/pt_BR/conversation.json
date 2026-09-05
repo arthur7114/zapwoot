@@ -274,8 +274,6 @@
     "SCHEDULE_MESSAGE": {
       "TITLE": "Agendar mensagem",
       "CONTENT_LABEL": "Mensagem",
-      "DATE_PLACEHOLDER": "Selecionar data e hora",
-      "DATE_CONFIRM": "Confirmar",
       "CANCEL": "Cancelar",
       "CONFIRM": "Agendar",
       "SUCCESS_MESSAGE": "Mensagem agendada com sucesso",
@@ -285,6 +283,16 @@
         "CANCEL_SUCCESS": "Mensagem agendada cancelada",
         "CANCEL_ERROR": "Não foi possível cancelar a mensagem agendada",
         "CANCEL_ITEM": "Cancelar"
+      },
+      "WHEN_LABEL": "Quando enviar",
+      "PICK_DATE": "Escolher outra data",
+      "SUMMARY": "Envia {when} · {relative}",
+      "PRESET": {
+        "IN_ONE_HOUR": "Em 1 hora",
+        "TODAY_EVENING": "Hoje às 18h",
+        "TOMORROW_MORNING": "Amanhã às 9h",
+        "IN_TWO_DAYS": "Em 2 dias",
+        "NEXT_MONDAY": "Próxima segunda"
       }
     },
     "VISIBLE_TO_AGENTS": "Mensagem Privada: Apenas visível para você e seu time",

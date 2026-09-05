@@ -288,8 +288,6 @@
     "SCHEDULE_MESSAGE": {
       "TITLE": "Schedule message",
       "CONTENT_LABEL": "Message",
-      "DATE_PLACEHOLDER": "Select date and time",
-      "DATE_CONFIRM": "Confirm",
       "CANCEL": "Cancel",
       "CONFIRM": "Schedule",
       "SUCCESS_MESSAGE": "Message scheduled successfully",
@@ -299,6 +297,16 @@
         "CANCEL_SUCCESS": "Scheduled message canceled",
         "CANCEL_ERROR": "Could not cancel the scheduled message",
         "CANCEL_ITEM": "Cancel"
+      },
+      "WHEN_LABEL": "When to send",
+      "PICK_DATE": "Pick another date",
+      "SUMMARY": "Sends {when} · {relative}",
+      "PRESET": {
+        "IN_ONE_HOUR": "In 1 hour",
+        "TODAY_EVENING": "Today at 6pm",
+        "TOMORROW_MORNING": "Tomorrow at 9am",
+        "IN_TWO_DAYS": "In 2 days",
+        "NEXT_MONDAY": "Next Monday"
       }
     },
     "VISIBLE_TO_AGENTS": "Private Note: Only visible to you and your team",
