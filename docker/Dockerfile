@@ -19,7 +19,10 @@ ENV RAILS_SERVE_STATIC_FILES ${RAILS_SERVE_STATIC_FILES}
 ARG RAILS_ENV=production
 ENV RAILS_ENV ${RAILS_ENV}
 
-ARG NODE_OPTIONS="--max-old-space-size=4096 --openssl-legacy-provider"
+# 2048 e nao 4096: o build roda no mesmo host que a producao, que deixa por volta de
+# 3.9 GB livres. Um teto de 4 GB faz o kernel matar o node sem mensagem nenhuma,
+# que foi como o deploy morreu. Com 2048 o node coleta lixo antes de estourar o host.
+ARG NODE_OPTIONS="--max-old-space-size=2048 --openssl-legacy-provider"
 ENV NODE_OPTIONS ${NODE_OPTIONS}
 
 ENV BUNDLE_PATH="/gems"
