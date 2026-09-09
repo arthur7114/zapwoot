@@ -116,3 +116,36 @@ Practical checklist for any change impacting core logic or public APIs
 ## Branding / White-labeling note
 
 - For user-facing strings that currently contain "Chatwoot" but should adapt to branded/self-hosted installs, prefer applying `replaceInstallationName` from `shared/composables/useBranding` in the UI layer (for example tooltip and suggestion labels) instead of adding hardcoded brand-specific copy.
+
+## Operação e deploy (fork zapwoot)
+
+Credenciais e ids de infraestrutura ficam em `.env.local`, que é ignorado pelo git.
+Este arquivo é versionado, então aqui vão só os nomes e onde obter cada valor.
+Se `.env.local` não existir, copie os nomes abaixo e preencha.
+
+| Variável | O que é | Onde obter |
+|---|---|---|
+| `CHATWOOT_URL` · `CHATWOOT_ACCOUNT_ID` | instância e conta | fixos: `zap.grandesignce.com.br`, conta `1` |
+| `CHATWOOT_INBOX_ID` | inbox do WhatsApp em uso | `11` (`Channel::Api`). O `10` é Cloud API e está sem uso |
+| `CHATWOOT_ADMIN_TOKEN` | token pessoal de administrador | Perfil → Configurações do perfil → Access Token |
+| `CHATWOOT_BOT_TOKEN` | token do AgentBot Edson (id 1) | `GET /api/v1/accounts/1/inboxes/11/agent_bot` |
+| `EVOLUTION_URL` · `EVOLUTION_INSTANCE` · `EVOLUTION_APIKEY` | ponte do WhatsApp | instância `gd-zapwoot`, **não** `gdcomercial` |
+| `EASYPANEL_URL` · `EASYPANEL_PROJECT` · `EASYPANEL_TOKEN` | deploy | projeto `ambient1`; token em Configurações → API |
+| `N8N_URL` · `N8N_WORKFLOW_*` | fluxos da IA | pré-atendimento `OecPlRL3BqSG604K`, lembrete 48h `ytJLKEhIvprbHTj5` |
+
+Regras que evitam retrabalho:
+
+- **Use o token do bot, não o de admin**, para qualquer coisa dentro de uma conversa.
+  O de admin é pessoal, tem acesso à conta inteira e vai ser rotacionado; o do bot tem
+  escopo estreito. Mais importante: mensagens enviadas com o token do bot saem com
+  `sender.type` igual a `agent_bot`, e a pausa automática da IA depende disso para não
+  se auto-pausar. O token de admin só serve para o que o bot não alcança: criar
+  AgentBot, etiquetas, macros, e listar conversas da conta.
+- **Deploy sai por push na `main`** do remote `deploy` (`arthur7114/zapwoot`), e hoje
+  ainda exige clicar Implantar no Easypanel em **dois** serviços: `chatwoot` e
+  `chatwoot-sidekiq`. Esquecer o sidekiq deixa os workers em código velho, e é ele que
+  roda `TriggerScheduledItemsJob`, que dispara mensagens agendadas e campanhas.
+- **O build roda no mesmo host que a produção**, que deixa por volta de 3.9 GB livres.
+  Por isso `NODE_OPTIONS` no `docker/Dockerfile` está limitado a 2048 MB: com 4096 o
+  kernel matava o node no meio do build e o log terminava sem mensagem de erro nenhuma.
+  Antes de aumentar esse número, adicione swap no servidor.
