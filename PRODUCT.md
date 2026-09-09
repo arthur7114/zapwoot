@@ -1,9 +1,5 @@
 # Product
 
-## Register
-
-product
-
 ## Users
 
 Support agents and admins on a commercial/sales team using this Chatwoot fork day-to-day inside the dashboard (conversations, kanban funnel, settings). Their context: fast-paced WhatsApp-driven customer contact and lead follow-up, often on a single screen for long stretches, switching between conversations, funnel stages, and quick replies. The job to be done on any given screen is almost always one of: reply to a customer fast, move a lead through the funnel, or configure the small set of entities (pipeline stages, canned responses, scheduled messages) that make the first two fast.
