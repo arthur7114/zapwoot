@@ -8,12 +8,14 @@ class Macros::ExecutionService < ActionService
   end
 
   def perform
-    @macro.actions.each do |action|
+    @macro.actions.each_with_index do |action, index|
       action = action.with_indifferent_access
       begin
         send(action[:action_name], action[:action_params])
       rescue StandardError => e
         ChatwootExceptionTracker.new(e, account: @account).capture_exception
+        report_interruption(action, index)
+        break
       end
     end
   ensure
@@ -21,6 +23,24 @@ class Macros::ExecutionService < ActionService
   end
 
   private
+
+  # A macro is an ordered script: later messages routinely refer to earlier ones, so skipping a
+  # failed action leaves the contact with a sequence that no longer makes sense. Stop instead, and
+  # leave a private note so the agent knows what is missing and can resend it.
+  def report_interruption(action, index)
+    content = I18n.t(
+      'conversations.macros.execution_failed',
+      macro_name: @macro.name,
+      position: index + 1,
+      total: @macro.actions.size,
+      action_name: action[:action_name]
+    )
+    Messages::MessageBuilder.new(@user, @conversation.reload, { content: content, private: true }).perform
+  rescue StandardError => e
+    # The action that just failed was itself a message write, so this one can fail the same way.
+    # Let the job finish instead of raising, otherwise the retry replays the whole sequence.
+    ChatwootExceptionTracker.new(e, account: @account).capture_exception
+  end
 
   def assign_agent(agent_ids)
     agent_ids = agent_ids.map { |id| id == 'self' ? @user.id : id }

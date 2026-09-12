@@ -292,6 +292,8 @@ en:
   conversations:
     captain:
       handoff: 'Transferring to another agent for further assistance.'
+    macros:
+      execution_failed: 'Macro "%{macro_name}" stopped at step %{position} of %{total} (%{action_name}). The remaining messages were not sent.'
     messages:
       instagram_story_content: '%{story_sender} mentioned you in the story: '
       instagram_deleted_story_content: This story is no longer available.
