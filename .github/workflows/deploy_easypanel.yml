@@ -44,10 +44,15 @@ jobs:
             -d "{\"json\":{\"projectName\":\"${PROJECT}\",\"serviceName\":\"${{ matrix.service }}\"}}")
 
           echo "HTTP ${status}"
-          cat "$response"
-          echo
 
+          # Never print the response body. On failure Easypanel echoes the whole
+          # `docker buildx build` command back, build args included, which puts
+          # SECRET_KEY_BASE, POSTGRES_PASSWORD, REDIS_PASSWORD and SMTP_PASSWORD
+          # straight into this log. The repository is public.
           if [ "$status" -ge 400 ]; then
-            echo "::error::Easypanel refused the deploy for ${{ matrix.service }} (HTTP ${status})."
+            code=$(jq -r '.json.code // "UNKNOWN"' "$response" 2>/dev/null || echo UNKNOWN)
+            echo "::error::Easypanel refused the deploy for ${{ matrix.service }} (HTTP ${status}, ${code}). The response body is withheld because it carries build args; read the build log in the Easypanel panel."
             exit 1
           fi
+
+          echo "Deploy triggered for ${{ matrix.service }}."
