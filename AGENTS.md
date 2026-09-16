@@ -141,11 +141,17 @@ Regras que evitam retrabalho:
   `sender.type` igual a `agent_bot`, e a pausa automática da IA depende disso para não
   se auto-pausar. O token de admin só serve para o que o bot não alcança: criar
   AgentBot, etiquetas, macros, e listar conversas da conta.
-- **Deploy sai por push na `main`** do remote `deploy` (`arthur7114/zapwoot`), e hoje
-  ainda exige clicar Implantar no Easypanel em **dois** serviços: `chatwoot` e
-  `chatwoot-sidekiq`. Esquecer o sidekiq deixa os workers em código velho, e é ele que
-  roda `TriggerScheduledItemsJob`, que dispara mensagens agendadas e campanhas.
-- **O build roda no mesmo host que a produção**, que deixa por volta de 3.9 GB livres.
-  Por isso `NODE_OPTIONS` no `docker/Dockerfile` está limitado a 2048 MB: com 4096 o
-  kernel matava o node no meio do build e o log terminava sem mensagem de erro nenhuma.
-  Antes de aumentar esse número, adicione swap no servidor.
+- **Deploy sai por push na `main`** do remote `deploy` (`arthur7114/zapwoot`). O workflow
+  `deploy_easypanel.yml` builda a imagem no runner do GitHub, publica em
+  `ghcr.io/arthur7114/zapwoot:latest` (e `:<sha>`) e só então manda o Easypanel implantar
+  os **dois** serviços, `chatwoot` e `chatwoot-sidekiq`, que apontam para essa imagem.
+  Esquecer o sidekiq deixa os workers em código velho, e é ele que roda
+  `TriggerScheduledItemsJob`, que dispara mensagens agendadas e campanhas.
+- **O build não roda mais no host.** Rodava, e nunca coube: o host deixa ~3.9 GB livres
+  servindo produção, o `vite build` precisa de mais heap que isso, e o resultado era ou
+  o kernel matando o node (heap 4096) ou o V8 abortando com `SIGABRT` (heap 2048).
+  O `NODE_OPTIONS` do `docker/Dockerfile` é só o default; o workflow passa 4096 como
+  build-arg porque o runner tem 7 GB. Se um dia voltar a buildar no host, adicione swap antes.
+- **Nenhum segredo entra como build-arg.** O Dockerfile precompila assets com
+  `SECRET_KEY_BASE=precompile_placeholder`; os valores reais vivem no ambiente do
+  serviço no Easypanel. A imagem no GHCR é pública e não carrega nada sensível.

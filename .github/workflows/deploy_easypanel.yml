@@ -1,6 +1,13 @@
 name: Deploy to Easypanel
 
 # Pushing to main is the deploy trigger, so nobody has to open the panel.
+#
+# The image is built HERE, on the GitHub runner, and pushed to GHCR. Easypanel
+# only pulls it. Building on the production host never fit: the box has ~3.9 GB
+# free while serving production, `vite build` needs more heap than that, and the
+# two failure modes were a kernel OOM kill (heap 4096) or a V8 abort (heap 2048).
+# The runner has 7 GB and nothing else to do.
+#
 # Both services run the same image: chatwoot serves the web app, chatwoot-sidekiq
 # runs the workers, including TriggerScheduledItemsJob. Deploying only one leaves
 # the other on stale code.
@@ -14,11 +21,47 @@ concurrency:
   group: deploy-easypanel
   cancel-in-progress: false
 
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # No secrets go in as build args. The Dockerfile precompiles assets with
+      # SECRET_KEY_BASE=precompile_placeholder; real values come from the
+      # service environment in Easypanel at runtime.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+          build-args: |
+            NODE_OPTIONS=--max-old-space-size=4096 --openssl-legacy-provider
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     strategy:
-      # Sequential: two simultaneous docker builds on the same host starve each other.
+      # Sequential so the two services never restart at the same moment.
       max-parallel: 1
       matrix:
         service: [chatwoot, chatwoot-sidekiq]
@@ -45,13 +88,11 @@ jobs:
 
           echo "HTTP ${status}"
 
-          # Never print the response body. On failure Easypanel echoes the whole
-          # `docker buildx build` command back, build args included, which puts
-          # SECRET_KEY_BASE, POSTGRES_PASSWORD, REDIS_PASSWORD and SMTP_PASSWORD
-          # straight into this log. The repository is public.
+          # Never print the response body: on failure Easypanel echoes internals
+          # back and this repository is public.
           if [ "$status" -ge 400 ]; then
             code=$(jq -r '.json.code // "UNKNOWN"' "$response" 2>/dev/null || echo UNKNOWN)
-            echo "::error::Easypanel refused the deploy for ${{ matrix.service }} (HTTP ${status}, ${code}). The response body is withheld because it carries build args; read the build log in the Easypanel panel."
+            echo "::error::Easypanel refused the deploy for ${{ matrix.service }} (HTTP ${status}, ${code}). Read the deploy log in the Easypanel panel."
             exit 1
           fi
 
