@@ -73,6 +73,11 @@ export const actions = {
     try {
       const response = await CampaignsAPI.create(campaignObj);
       commit(types.ADD_CAMPAIGN, response.data);
+    } catch (error) {
+      // Keep the server response so the form can show the validation message.
+      const wrapped = new Error(error?.message);
+      wrapped.response = error?.response;
+      throw wrapped;
     } finally {
       commit(types.SET_CAMPAIGN_UI_FLAG, { isCreating: false });
     }
