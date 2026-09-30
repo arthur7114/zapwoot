@@ -16,6 +16,16 @@ class Api::V1::Accounts::CampaignsController < Api::V1::Accounts::BaseController
     @campaign.update!(campaign_params)
   end
 
+  def pause
+    @campaign.pause!
+    render :show
+  end
+
+  def resume
+    @campaign.resume!
+    render :show
+  end
+
   def destroy
     @campaign.destroy!
     head :ok
@@ -29,6 +39,9 @@ class Api::V1::Accounts::CampaignsController < Api::V1::Accounts::BaseController
 
   def campaign_params
     params.require(:campaign).permit(:title, :description, :message, :enabled, :trigger_only_during_business_hours, :inbox_id, :sender_id,
-                                     :scheduled_at, audience: [:type, :id], trigger_rules: {}, template_params: {})
+                                     :scheduled_at,
+                                     send_schedule: [:timezone, :daily_limit, { weekdays: [], excluded_dates: [], windows: [[:start, :end]],
+                                                                                interval: [:min, :max], batch_pause: [:every, :minutes] }],
+                                     audience: [:type, :id], trigger_rules: {}, template_params: {})
   end
 end
