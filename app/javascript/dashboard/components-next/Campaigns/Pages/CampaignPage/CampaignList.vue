@@ -10,12 +10,18 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  showRunControls: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const emit = defineEmits(['edit', 'delete']);
+const emit = defineEmits(['edit', 'delete', 'pause', 'resume']);
 
 const handleEdit = campaign => emit('edit', campaign);
 const handleDelete = campaign => emit('delete', campaign);
+const handlePause = campaign => emit('pause', campaign);
+const handleResume = campaign => emit('resume', campaign);
 </script>
 
 <template>
@@ -31,8 +37,12 @@ const handleDelete = campaign => emit('delete', campaign);
       :inbox="campaign.inbox"
       :scheduled-at="campaign.scheduled_at"
       :is-live-chat-type="isLiveChatType"
+      :show-run-controls="showRunControls"
+      :recipient-counts="campaign.recipient_counts"
       @edit="handleEdit(campaign)"
       @delete="handleDelete(campaign)"
+      @pause="handlePause(campaign)"
+      @resume="handleResume(campaign)"
     />
   </div>
 </template>

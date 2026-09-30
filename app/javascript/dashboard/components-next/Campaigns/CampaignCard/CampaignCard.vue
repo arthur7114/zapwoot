@@ -42,14 +42,23 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  showRunControls: {
+    type: Boolean,
+    default: false,
+  },
+  recipientCounts: {
+    type: Object,
+    default: null,
+  },
 });
 
-const emit = defineEmits(['edit', 'delete']);
+const emit = defineEmits(['edit', 'delete', 'pause', 'resume']);
 
 const { t } = useI18n();
 
 const STATUS_COMPLETED = 'completed';
 const STATUS_PROCESSING = 'processing';
+const STATUS_PAUSED = 'paused';
 
 const { formatMessage } = useMessageFormatter();
 
@@ -77,7 +86,19 @@ const campaignStatus = computed(() => {
     return t('CAMPAIGN.SMS.CARD.STATUS.PROCESSING');
   }
 
+  if (props.status === STATUS_PAUSED) {
+    return t('CAMPAIGN.SMS.CARD.STATUS.PAUSED');
+  }
+
   return t('CAMPAIGN.SMS.CARD.STATUS.SCHEDULED');
+});
+
+const progress = computed(() => {
+  if (!props.recipientCounts) return '';
+  const counts = props.recipientCounts;
+  const total = Object.values(counts).reduce((sum, value) => sum + value, 0);
+  const pending = counts.queued || 0;
+  return t('CAMPAIGN.API.CARD.PROGRESS', { sent: total - pending, total });
 });
 
 const inboxName = computed(() => props.inbox?.name || '');
@@ -107,6 +128,9 @@ const inboxIcon = computed(() => {
         >
           {{ campaignStatus }}
         </span>
+        <span v-if="progress" class="text-xs text-n-slate-11 self-center">
+          {{ progress }}
+        </span>
       </div>
       <div
         v-dompurify-html="formatMessage(message, false, false, false)"
@@ -127,7 +151,27 @@ const inboxIcon = computed(() => {
         />
       </div>
     </div>
-    <div class="flex items-center justify-end w-20 gap-2">
+    <div class="flex items-center justify-end gap-2 min-w-20">
+      <Button
+        v-if="showRunControls && status === STATUS_PROCESSING"
+        v-tooltip.top="t('CAMPAIGN.API.CARD.PAUSE')"
+        variant="faded"
+        size="sm"
+        color="slate"
+        icon="i-lucide-pause"
+        :aria-label="t('CAMPAIGN.API.CARD.PAUSE')"
+        @click="emit('pause')"
+      />
+      <Button
+        v-if="showRunControls && status === STATUS_PAUSED"
+        v-tooltip.top="t('CAMPAIGN.API.CARD.RESUME')"
+        variant="faded"
+        size="sm"
+        color="slate"
+        icon="i-lucide-play"
+        :aria-label="t('CAMPAIGN.API.CARD.RESUME')"
+        @click="emit('resume')"
+      />
       <Button
         v-if="isLiveChatType"
         variant="faded"

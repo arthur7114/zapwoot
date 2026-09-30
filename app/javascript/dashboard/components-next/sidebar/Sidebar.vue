@@ -535,6 +535,11 @@ const menuItems = computed(() => {
           label: t('SIDEBAR.WHATSAPP'),
           to: accountScopedRoute('campaigns_whatsapp_index'),
         },
+        {
+          name: 'WhatsApp API',
+          label: t('SIDEBAR.WHATSAPP_API'),
+          to: accountScopedRoute('campaigns_api_index'),
+        },
       ],
     },
     {

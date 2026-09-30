@@ -90,7 +90,8 @@
         "STATUS": {
           "PROCESSING": "Processing",
           "COMPLETED": "Completed",
-          "SCHEDULED": "Scheduled"
+          "SCHEDULED": "Scheduled",
+          "PAUSED": "Paused"
         },
         "CAMPAIGN_DETAILS": {
           "SENT_FROM": "Sent from",
@@ -215,6 +216,131 @@
       "API": {
         "SUCCESS_MESSAGE": "Campaign deleted successfully",
         "ERROR_MESSAGE": "There was an error. Please try again."
+      }
+    },
+    "API": {
+      "HEADER_TITLE": "WhatsApp API campaigns",
+      "NEW_CAMPAIGN": "Create campaign",
+      "EMPTY_STATE": {
+        "TITLE": "No WhatsApp API campaigns are available",
+        "SUBTITLE": "Send messages through your API inbox at a controlled pace, inside the days and hours you allow."
+      },
+      "CARD": {
+        "PAUSE": "Pause sending",
+        "RESUME": "Resume sending",
+        "PROGRESS": "{sent} of {total} processed",
+        "RUN_STATE_ERROR": "Could not change the campaign. Please try again."
+      },
+      "CREATE": {
+        "TITLE": "Create WhatsApp API campaign",
+        "FORM": {
+          "TITLE": {
+            "LABEL": "Title",
+            "PLACEHOLDER": "For example: October promotion",
+            "ERROR": "Title is required"
+          },
+          "MESSAGE": {
+            "LABEL": "Message",
+            "PLACEHOLDER": "Write the message. Liquid variables such as the contact name are supported.",
+            "ERROR": "Message is required"
+          },
+          "INBOX": {
+            "LABEL": "API inbox",
+            "PLACEHOLDER": "Select the API inbox",
+            "ERROR": "Inbox is required"
+          },
+          "AUDIENCE": {
+            "LABEL": "Audience",
+            "PLACEHOLDER": "Select the customer labels",
+            "ERROR": "Audience is required"
+          },
+          "SCHEDULED_AT": {
+            "LABEL": "Start sending from",
+            "PLACEHOLDER": "Please select the time",
+            "ERROR": "Scheduled time is required"
+          },
+          "BUTTONS": {
+            "CREATE": "Create and schedule",
+            "CANCEL": "Cancel"
+          },
+          "API": {
+            "SUCCESS_MESSAGE": "Campaign created successfully",
+            "ERROR_MESSAGE": "There was an error. Please try again."
+          }
+        }
+      },
+      "SCHEDULE": {
+        "TITLE": "Sending rules",
+        "TIMEZONE": "Timezone",
+        "WEEKDAYS": "Days allowed",
+        "DAYS": {
+          "MON": "Mon",
+          "TUE": "Tue",
+          "WED": "Wed",
+          "THU": "Thu",
+          "FRI": "Fri",
+          "SAT": "Sat",
+          "SUN": "Sun"
+        },
+        "WINDOWS": {
+          "LABEL": "Sending hours",
+          "HELP": "Messages only go out inside these hours. Add a second range to skip lunch, for example.",
+          "FROM": "From",
+          "TO": "Until",
+          "ADD": "Add time range",
+          "REMOVE": "Remove time range {start} to {end}"
+        },
+        "EXCLUDED_DATES": {
+          "LABEL": "Days with no sending (holidays)",
+          "INPUT": "Date with no sending",
+          "ADD": "Add",
+          "REMOVE": "Remove {date}"
+        },
+        "INTERVAL": {
+          "LABEL": "Interval between messages (seconds)",
+          "MIN": "Minimum",
+          "MAX": "Maximum"
+        },
+        "BATCH_PAUSE": {
+          "LABEL": "Break between batches",
+          "HELP": "After a batch of messages, wait before continuing. Set messages to 0 to turn this off.",
+          "EVERY": "Messages per batch",
+          "MINUTES": "Break (minutes)"
+        },
+        "DAILY_LIMIT": {
+          "LABEL": "Daily limit",
+          "PLACEHOLDER": "No limit"
+        },
+        "DAYS_FULL": {
+          "MON": "Monday",
+          "TUE": "Tuesday",
+          "WED": "Wednesday",
+          "THU": "Thursday",
+          "FRI": "Friday",
+          "SAT": "Saturday",
+          "SUN": "Sunday"
+        },
+        "ERRORS": {
+          "WEEKDAYS": "Pick at least one day.",
+          "WINDOW_INVALID": "The end time must be after the start time.",
+          "WINDOW_OVERLAP": "This range overlaps another one.",
+          "INTERVAL": "Minimum must be 0 or more, and maximum cannot be lower than minimum.",
+          "BATCH_PAUSE": "Set a break of at least 1 minute, or set messages to 0.",
+          "DAILY_LIMIT": "Daily limit must be at least 1, or leave it empty."
+        }
+      },
+      "SUMMARY": {
+        "TITLE": "How this campaign will send",
+        "WHEN": "{days}, {windows} ({timezone})",
+        "PACE": "One message every {min} to {max} seconds",
+        "BATCH_PAUSE": "A {minutes}-minute break after every {every} messages",
+        "DAILY_LIMIT": "At most {limit} messages per day",
+        "NO_DAILY_LIMIT": "No daily limit",
+        "EXCLUDED": "Skips {count} blocked date(s)"
+      },
+      "RISK": {
+        "NOTICE": "This inbox uses an unofficial WhatsApp connection. Sending too fast or to people who did not expect your message can get the number banned. Keep a gentle pace and a daily limit.",
+        "ACKNOWLEDGE": "I understand the risk and the audience expects this message."
       }
     }
   }

@@ -44,6 +44,9 @@ export const getters = {
     const whatsappChannelTypes = [INBOX_TYPES.WHATSAPP];
     return _getters.getCampaigns(CAMPAIGN_TYPES.ONE_OFF, whatsappChannelTypes);
   },
+  getAPICampaigns: (_state, _getters) => {
+    return _getters.getCampaigns(CAMPAIGN_TYPES.ONE_OFF, [INBOX_TYPES.API]);
+  },
   getLiveChatCampaigns: (_state, _getters) => {
     const liveChatChannelTypes = [INBOX_TYPES.WEB];
     return _getters.getCampaigns(CAMPAIGN_TYPES.ONGOING, liveChatChannelTypes);
@@ -70,8 +73,6 @@ export const actions = {
     try {
       const response = await CampaignsAPI.create(campaignObj);
       commit(types.ADD_CAMPAIGN, response.data);
-    } catch (error) {
-      throw new Error(error);
     } finally {
       commit(types.SET_CAMPAIGN_UI_FLAG, { isCreating: false });
     }
@@ -87,6 +88,14 @@ export const actions = {
     } finally {
       commit(types.SET_CAMPAIGN_UI_FLAG, { isUpdating: false });
     }
+  },
+  pause: async ({ commit }, id) => {
+    const response = await CampaignsAPI.pause(id);
+    commit(types.EDIT_CAMPAIGN, response.data);
+  },
+  resume: async ({ commit }, id) => {
+    const response = await CampaignsAPI.resume(id);
+    commit(types.EDIT_CAMPAIGN, response.data);
   },
   delete: async ({ commit }, id) => {
     commit(types.SET_CAMPAIGN_UI_FLAG, { isDeleting: true });
