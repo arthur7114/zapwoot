@@ -1,8 +1,8 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { format } from 'date-fns';
+import { computed, ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAlert } from 'dashboard/composables';
+import { useLocale } from 'shared/composables/useLocale';
 import ScheduledMessageApi from 'dashboard/api/inbox/scheduledMessage';
 
 const props = defineProps({
@@ -10,6 +10,7 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const { resolvedLocale } = useLocale();
 
 const scheduledMessages = ref([]);
 
@@ -22,8 +23,18 @@ const fetchScheduledMessages = async () => {
   }
 };
 
+const scheduledAtFormatter = computed(
+  () =>
+    new Intl.DateTimeFormat(resolvedLocale.value, {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+);
+
 const formatScheduledAt = scheduledAt =>
-  format(new Date(scheduledAt * 1000), 'MMM d, HH:mm');
+  scheduledAtFormatter.value.format(new Date(scheduledAt * 1000));
 
 const cancelScheduledMessage = async scheduledMessage => {
   try {

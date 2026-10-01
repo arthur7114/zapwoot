@@ -1,7 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DatePicker from 'vue-datepicker-next';
+import { useLocale } from 'shared/composables/useLocale';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import TextArea from 'dashboard/components-next/textarea/TextArea.vue';
 
@@ -11,7 +12,9 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'schedule']);
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
+// vue-i18n locales use underscores (pt_BR), which Intl rejects.
+const { resolvedLocale: locale } = useLocale();
 
 const content = ref(props.initialContent);
 const scheduledAt = ref(null);
@@ -101,14 +104,12 @@ const summary = computed(() =>
 );
 
 // vue-datepicker-next ships English month and weekday names; derive them from the
-// active locale so the calendar matches the rest of the dashboard.
+// active locale so the calendar matches the rest of the dashboard. The standalone
+// DateTime panel has no `lang` prop, it reads the locale injected by the picker.
 const datePickerLang = computed(() => {
   const monthName = new Intl.DateTimeFormat(locale.value, { month: 'long' });
   const weekdayShort = new Intl.DateTimeFormat(locale.value, {
     weekday: 'short',
-  });
-  const weekdayNarrow = new Intl.DateTimeFormat(locale.value, {
-    weekday: 'narrow',
   });
   const monthAt = index => new Date(2021, index, 1);
   const weekdayAt = index => new Date(2021, 7, 1 + index);
@@ -125,13 +126,19 @@ const datePickerLang = computed(() => {
       weekdaysShort: Array.from({ length: 7 }, (_, i) =>
         weekdayShort.format(weekdayAt(i))
       ),
+      // Two letters, since single-letter names repeat (T/T, S/S) in pt-BR.
       weekdaysMin: Array.from({ length: 7 }, (_, i) =>
-        weekdayNarrow.format(weekdayAt(i))
+        weekdayShort.format(weekdayAt(i)).slice(0, 2)
       ),
     },
     monthBeforeYear: true,
   };
 });
+
+provide(
+  'datepicker_locale',
+  computed(() => ({ ...DatePicker.locale(), ...datePickerLang.value }))
+);
 
 const isFormValid = computed(
   () => content.value.trim().length > 0 && !!scheduledAt.value
@@ -220,14 +227,11 @@ const onSchedule = () => {
           v-if="isCalendarOpen"
           class="p-2 mt-3 rounded-lg outline outline-1 outline-n-container"
         >
-          <DatePicker
+          <DatePicker.DateTime
             :value="scheduledAt"
-            type="datetime"
-            inline
-            :clearable="false"
-            :editable="false"
+            format="HH:mm"
+            time-title-format="DD/MM/YYYY"
             :show-second="false"
-            :lang="datePickerLang"
             :disabled-date="disabledDate"
             :disabled-time="disabledTime"
             :time-picker-options="{
