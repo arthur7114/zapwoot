@@ -15,7 +15,8 @@
         "REQUIRED_ERROR": "O nome da etapa é obrigatório"
       },
       "COLOR": {
-        "LABEL": "Cor"
+        "LABEL": "Cor",
+        "CUSTOM": "Cor personalizada"
       },
       "EDIT": "Editar",
       "CREATE": "Criar",
