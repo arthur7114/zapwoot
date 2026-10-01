@@ -5,6 +5,7 @@
     "WEEK_NUMBER": "Week #{weekNumber}",
     "APPLY_BUTTON": "Apply",
     "CLEAR_BUTTON": "Clear",
+    "INVALID_RANGE": "Please select a valid time range",
     "DATE_RANGE_INPUT": {
       "START": "Start Date",
       "END": "End Date"

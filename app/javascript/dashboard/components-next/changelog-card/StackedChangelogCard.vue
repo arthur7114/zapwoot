@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from 'vue-i18n';
 import Button from 'dashboard/components-next/button/Button.vue';
 
 defineProps({
@@ -17,6 +18,8 @@ defineProps({
 });
 
 const emit = defineEmits(['readMore', 'dismiss', 'imgClick']);
+
+const { t } = useI18n();
 
 const handleReadMore = () => {
   emit('readMore');
@@ -82,7 +85,7 @@ const handleImgClick = () => {
 
     <div class="flex justify-between items-center mt-1">
       <Button
-        label="Read more"
+        :label="t('COMMON.READ_MORE')"
         color="slate"
         link
         sm
@@ -90,7 +93,7 @@ const handleImgClick = () => {
         @click.stop="handleReadMore"
       />
       <Button
-        label="Dismiss"
+        :label="t('COMMON.DISMISS')"
         color="slate"
         link
         sm

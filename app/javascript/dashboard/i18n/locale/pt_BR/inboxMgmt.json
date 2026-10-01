@@ -443,9 +443,9 @@
         "TITLE": "Canal do Telegram",
         "DESC": "Integre com o canal do Telegram e comece a apoiar seus clientes.",
         "BOT_TOKEN": {
-          "LABEL": "Bot Token",
+          "LABEL": "Token do bot",
           "SUBTITLE": "Configure o token do bot que obteve do Telegram BotFather.",
-          "PLACEHOLDER": "Bot Token"
+          "PLACEHOLDER": "Token do bot"
         },
         "SUBMIT_BUTTON": "Criar canal do Telegram",
         "API": {
@@ -520,14 +520,14 @@
       },
       "FINISH": {
         "TITLE": "Tudo funcionando. Deu certo!",
-        "DESC": "Você concluiu a integração da sua página do Facebook com o Chatwoot. Na próxima vez que um cliente enviar uma mensagem para sua página, a conversa aparecerá automaticamente na sua caixa de entrada. <br> Também estamos fornecendo um script de widget que você pode adicionar facilmente ao seu site. Assim que estiver disponível no seu site, os clientes poderão enviar mensagens diretamente do seu site, sem a ajuda de nenhuma ferramenta externa, e a conversa aparecerá aqui, no Chatwoot. Legal, hein? Com certeza estamos tentamos ser :)"
+        "DESC": "Você concluiu a integração da sua página do Facebook com o Chatwoot. Na próxima vez que um cliente enviar uma mensagem para sua página, a conversa aparecerá automaticamente na sua caixa de entrada.<br>Também estamos fornecendo um script de widget que você pode adicionar facilmente ao seu site. Assim que estiver disponível no seu site, os clientes poderão enviar mensagens diretamente do seu site, sem a ajuda de nenhuma ferramenta externa, e a conversa aparecerá aqui, no Chatwoot.<br>Legal, hein? Pode apostar que a gente se esforça para ser :)"
       },
       "EMAIL_PROVIDER": {
         "TITLE": "Selecione seu provedor de e-mail",
         "DESCRIPTION": "Selecione um provedor de e-mail da lista abaixo. Se você não ver seu provedor de e-mail na lista, você pode selecionar a outra opção de provedor e fornecer as credenciais IMAP e SMTP."
       },
       "MICROSOFT": {
-        "TITLE": "Microsoft Email",
+        "TITLE": "E-mail Microsoft",
         "DESCRIPTION": "Clique no botão Entrar com a Microsoft para começar. Você será redirecionado para o login do e-mail. Após aceitar as permissões solicitadas, você será redirecionado de volta para a etapa de criação da caixa de entrada.",
         "EMAIL_PLACEHOLDER": "Digite o endereço de e-mail",
         "SIGN_IN": "Entre com uma conta Microsoft",
@@ -758,8 +758,8 @@
       "USE_INBOX_AVATAR_FOR_BOT": "Use o nome da caixa de entrada e avatar do bot"
     },
     "SETTINGS_POPUP": {
-      "MESSENGER_HEADING": "Código Menssageiro <scripit>",
-      "MESSENGER_SUB_HEAD": "Favor, insira essse código <script> dentro da tag Body de sua página html",
+      "MESSENGER_HEADING": "Script do Messenger",
+      "MESSENGER_SUB_HEAD": "Insira este botão dentro da tag body da sua página",
       "ALLOWED_DOMAINS": {
         "TITLE": "Domínios permitidos",
         "DESCRIPTION": "Restrinja quais sites podem incorporar seu widget de chat. Por segurança, adicione apenas domínios que você possui e confia. Adicione um ou mais domínios separados por vírgulas. Deixe em branco para permitir todos os domínios (não recomendado para produção).",

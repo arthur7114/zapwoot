@@ -9,7 +9,7 @@
       "STORE_URL": {
         "TITLE": "Conectar Loja Shopify",
         "LABEL": "URL da Loja",
-        "PLACEHOLDER": "your-store.myshopify.com",
+        "PLACEHOLDER": "sua-loja.myshopify.com",
         "HELP": "Insira a URL meushopify.com da sua loja Shopify",
         "CANCEL": "Cancelar",
         "SUBMIT": "Conectar Loja"
@@ -451,7 +451,7 @@
         "EMPTY": "Não foram encontrados registros para essa métrica.",
         "ERROR": "Não foi possível carregar os registros. Por favor, tente novamente.",
         "LOAD_MORE": "Carregar mais",
-        "RESULT_COUNT_CONVERSATION": "Conversa {count} + Conversas {count}"
+        "RESULT_COUNT_CONVERSATION": "{count} conversa | {count} conversas"
       },
       "KNOWLEDGE": {
         "TITLE": "Cobertura de conhecimento",
@@ -818,7 +818,7 @@
     "DOCUMENTS": {
       "HEADER": "Documentos",
       "ADD_NEW": "Criar um novo documento",
-      "FAQ_COUNT": "Perguntas Frequentes (F{n} ) {n} FAQs",
+      "FAQ_COUNT": "{n} FAQ | {n} FAQs",
       "SELECTED": "{count} selecionado",
       "SELECT_ALL": "Selecionar todos ({count})",
       "UNSELECT_ALL": "Desmarcar todos ({count})",

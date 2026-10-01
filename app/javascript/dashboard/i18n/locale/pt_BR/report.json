@@ -123,8 +123,8 @@
     },
     "DRILLDOWN": {
       "TITLE": "Detalhes {metric}",
-      "RESULT_COUNT_CONVERSATION": "Conversa {count} + Conversas {count}",
-      "RESULT_COUNT_MESSAGE": "Mensagem de {count} + {count}",
+      "RESULT_COUNT_CONVERSATION": "{count} conversa | {count} conversas",
+      "RESULT_COUNT_MESSAGE": "{count} mensagem | {count} mensagens",
       "EMPTY": "Nenhum registro encontrado para esta barra.",
       "ERROR": "Não foi possível carregar os registros. Por favor, tente novamente.",
       "ADMIN_ONLY": "Apenas os administradores podem detalhar nos registros do relatório.",

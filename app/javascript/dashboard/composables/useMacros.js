@@ -34,7 +34,7 @@ export const useMacros = () => {
       case 'assign_agent':
         return [
           ...withNoneOption(),
-          { id: 'self', name: 'Self' },
+          { id: 'self', name: t('AUTOMATION.SELF_OPTION') },
           ...agents.value,
         ];
       case 'add_label':

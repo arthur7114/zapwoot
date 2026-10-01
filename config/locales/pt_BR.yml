@@ -63,7 +63,7 @@ pt_BR:
       reporting_timezone:
         invalid: não é um fuso horário válido
       support_email:
-        invalid: is not a valid email address
+        invalid: não é um endereço de e-mail válido
     validations:
       presence: não pode ficar em branco
     webhook:
@@ -138,6 +138,7 @@ pt_BR:
       invalid_token_permissions: 'O token de acesso não tem as permissões necessárias para o WhatsApp.'
       phone_info_fetch_failed: 'Falha ao obter a informação do número de telefone. Por favor, tente novamente.'
       phone_number_already_exists: 'Já existe um canal para este número de telefone: %{phone_number}. Entre em contato com o suporte se o erro persistir'
+      message_outside_messaging_window: 'Mensagem não enviada porque a janela de atendimento de 24 horas do WhatsApp está fechada e nenhum parâmetro de modelo foi informado. Envie uma mensagem de modelo aprovado.'
       reauthorization:
         generic: 'Falha ao reautenticar o WhatsApp. Por favor, tente novamente.'
         not_supported: 'Reautenticação não é suportado por este tipo de canal WhatsApp.'
@@ -275,6 +276,8 @@ pt_BR:
   conversations:
     captain:
       handoff: 'Transferindo para que outro agente dê assistência.'
+    macros:
+      execution_failed: 'A macro "%{macro_name}" parou na etapa %{position} de %{total} (%{action_name}). As mensagens restantes não foram enviadas.'
     messages:
       instagram_story_content: '%{story_sender} mencionou você na conversa: '
       instagram_deleted_story_content: Este Story não está mais disponível.

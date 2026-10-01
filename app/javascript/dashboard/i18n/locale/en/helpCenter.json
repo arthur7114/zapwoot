@@ -50,7 +50,8 @@
         "ERROR_FILE_SIZE": "Image size should be less than {size}MB",
         "ERROR_FILE_FORMAT": "Image format should be jpg, jpeg or png",
         "ERROR_FILE_DIMENSIONS": "Image dimensions should be less than 2000 x 2000"
-      }
+      },
+      "TITLE_PLACEHOLDER": "Title"
     },
     "ARTICLE_SETTINGS": {
       "TITLE": "Article Settings",
@@ -649,7 +650,10 @@
         "SUBTITLE": "We couldn't find any categories matching your search. Try a different term."
       },
       "CATEGORY_CARD": {
-        "ARTICLES_COUNT": "{count} article | {count} articles"
+        "ARTICLES_COUNT": "{count} article | {count} articles",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "NO_DESCRIPTION": "No description added"
       },
       "CATEGORY_DIALOG": {
         "CREATE": {

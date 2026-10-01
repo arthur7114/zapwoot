@@ -90,7 +90,8 @@
         "STATUS": {
           "PROCESSING": "Processando",
           "COMPLETED": "Concluído",
-          "SCHEDULED": "Agendada"
+          "SCHEDULED": "Agendada",
+          "PAUSED": "Pausada"
         },
         "CAMPAIGN_DETAILS": {
           "SENT_FROM": "Enviado de",
@@ -215,6 +216,131 @@
       "API": {
         "SUCCESS_MESSAGE": "Campanha excluída com sucesso",
         "ERROR_MESSAGE": "Houve um erro. Por favor, tente novamente."
+      }
+    },
+    "API": {
+      "HEADER_TITLE": "Campanhas de API do WhatsApp",
+      "NEW_CAMPAIGN": "Criar campanha",
+      "EMPTY_STATE": {
+        "TITLE": "Nenhuma campanha de API do WhatsApp está disponível",
+        "SUBTITLE": "Envie mensagens pela sua caixa de entrada de API em um ritmo controlado, dentro dos dias e horários que você permitir."
+      },
+      "CARD": {
+        "PAUSE": "Pausar envio",
+        "RESUME": "Retomar envio",
+        "PROGRESS": "{sent} de {total} processados",
+        "RUN_STATE_ERROR": "Não foi possível alterar a campanha. Por favor, tente novamente."
+      },
+      "CREATE": {
+        "TITLE": "Criar campanha de API do WhatsApp",
+        "FORM": {
+          "TITLE": {
+            "LABEL": "Título",
+            "PLACEHOLDER": "Por exemplo: Promoção de outubro",
+            "ERROR": "Título é obrigatório"
+          },
+          "MESSAGE": {
+            "LABEL": "Mensagem",
+            "PLACEHOLDER": "Escreva a mensagem. Você pode usar variáveis: {'{{'}contact.first_name{'}}'} e {'{{'}saudacao{'}}'} (Bom dia, Boa tarde ou Boa noite, conforme o horário do envio).",
+            "ERROR": "A mensagem é obrigatória"
+          },
+          "INBOX": {
+            "LABEL": "Caixa de entrada de API",
+            "PLACEHOLDER": "Selecione a caixa de entrada de API",
+            "ERROR": "Caixa de entrada obrigatória"
+          },
+          "AUDIENCE": {
+            "LABEL": "Público",
+            "PLACEHOLDER": "Selecione as etiquetas dos clientes",
+            "ERROR": "Público é necessário"
+          },
+          "SCHEDULED_AT": {
+            "LABEL": "Começar a enviar a partir de",
+            "PLACEHOLDER": "Por favor, selecione o horário",
+            "ERROR": "Horário agendado é necessário"
+          },
+          "BUTTONS": {
+            "CREATE": "Criar e agendar",
+            "CANCEL": "Cancelar"
+          },
+          "API": {
+            "SUCCESS_MESSAGE": "Campanha criada com sucesso",
+            "ERROR_MESSAGE": "Houve um erro. Por favor, tente novamente."
+          }
+        }
+      },
+      "SCHEDULE": {
+        "TITLE": "Regras de envio",
+        "TIMEZONE": "Fuso horário",
+        "WEEKDAYS": "Dias permitidos",
+        "DAYS": {
+          "MON": "Seg",
+          "TUE": "Ter",
+          "WED": "Qua",
+          "THU": "Qui",
+          "FRI": "Sex",
+          "SAT": "Sáb",
+          "SUN": "Dom"
+        },
+        "WINDOWS": {
+          "LABEL": "Horários de envio",
+          "HELP": "As mensagens só são enviadas dentro destes horários. Adicione uma segunda faixa para pular o almoço, por exemplo.",
+          "FROM": "De",
+          "TO": "Até",
+          "ADD": "Adicionar faixa de horário",
+          "REMOVE": "Remover faixa de horário de {start} a {end}"
+        },
+        "EXCLUDED_DATES": {
+          "LABEL": "Dias sem envio (feriados)",
+          "INPUT": "Data sem envio",
+          "ADD": "Adicionar",
+          "REMOVE": "Remover {date}"
+        },
+        "INTERVAL": {
+          "LABEL": "Intervalo entre mensagens (segundos)",
+          "MIN": "Mínimo",
+          "MAX": "Máximo"
+        },
+        "BATCH_PAUSE": {
+          "LABEL": "Pausa entre lotes",
+          "HELP": "Depois de um lote de mensagens, aguarde antes de continuar. Defina as mensagens como 0 para desativar.",
+          "EVERY": "Mensagens por lote",
+          "MINUTES": "Pausa (minutos)"
+        },
+        "DAILY_LIMIT": {
+          "LABEL": "Limite diário",
+          "PLACEHOLDER": "Sem limite"
+        },
+        "DAYS_FULL": {
+          "MON": "Segunda-feira",
+          "TUE": "Terça-feira",
+          "WED": "Quarta-feira",
+          "THU": "Quinta-feira",
+          "FRI": "Sexta-feira",
+          "SAT": "Sábado",
+          "SUN": "Domingo"
+        },
+        "ERRORS": {
+          "WEEKDAYS": "Escolha pelo menos um dia.",
+          "WINDOW_INVALID": "O horário final deve ser depois do horário inicial.",
+          "WINDOW_OVERLAP": "Esta faixa se sobrepõe a outra.",
+          "INTERVAL": "O mínimo deve ser 0 ou mais, e o máximo não pode ser menor que o mínimo.",
+          "BATCH_PAUSE": "Defina uma pausa de pelo menos 1 minuto ou defina as mensagens como 0.",
+          "DAILY_LIMIT": "O limite diário deve ser de pelo menos 1, ou deixe o campo vazio."
+        }
+      },
+      "SUMMARY": {
+        "TITLE": "Como esta campanha será enviada",
+        "WHEN": "{days}, {windows} ({timezone})",
+        "PACE": "Uma mensagem a cada {min} a {max} segundos",
+        "BATCH_PAUSE": "Pausa de {minutes} minutos a cada {every} mensagens",
+        "DAILY_LIMIT": "No máximo {limit} mensagens por dia",
+        "NO_DAILY_LIMIT": "Sem limite diário",
+        "EXCLUDED": "Ignora {count} data(s) bloqueada(s)"
+      },
+      "RISK": {
+        "NOTICE": "Esta caixa de entrada usa uma conexão não oficial do WhatsApp. Enviar rápido demais ou para pessoas que não esperavam sua mensagem pode levar ao banimento do número. Mantenha um ritmo tranquilo e um limite diário.",
+        "ACKNOWLEDGE": "Entendo o risco e sei que o público espera esta mensagem."
       }
     }
   }
