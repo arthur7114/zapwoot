@@ -6,10 +6,12 @@ import { getRandomColor } from 'dashboard/helper/labelColor';
 import { useVuelidate } from '@vuelidate/core';
 
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import StageColorPicker from './StageColorPicker.vue';
 
 export default {
   components: {
     NextButton,
+    StageColorPicker,
   },
   emits: ['close'],
   setup() {
@@ -75,10 +77,10 @@ export default {
         @blur="v$.title.$touch"
       />
       <div class="w-full">
-        <label>
+        <span class="block mb-1 text-sm font-medium text-n-slate-12">
           {{ $t('PIPELINE_STAGE_MGMT.FORM.COLOR.LABEL') }}
-          <woot-color-picker v-model="color" />
-        </label>
+        </span>
+        <StageColorPicker v-model="color" />
       </div>
       <div class="flex items-center justify-end w-full gap-2 px-0 py-2">
         <NextButton

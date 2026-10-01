@@ -10,7 +10,7 @@ import Avatar from 'next/avatar/Avatar.vue';
 import SLACardLabel from './components/SLACardLabel.vue';
 import ConversationCallButton from './ConversationCallButton.vue';
 import wootConstants from 'dashboard/constants/globals';
-import { conversationListPageURL } from 'dashboard/helper/URLHelper';
+import { conversationListPageURLFromRoute } from 'dashboard/helper/URLHelper';
 import { snoozedReopenTime } from 'dashboard/helper/snoozeHelpers';
 import { useInbox } from 'dashboard/composables/useInbox';
 import { useAlert } from 'dashboard/composables';
@@ -40,26 +40,9 @@ const accountId = computed(() => store.getters.getCurrentAccountId);
 
 const chatMetadata = computed(() => props.chat.meta);
 
-const backButtonUrl = computed(() => {
-  const {
-    params: { inbox_id: inboxId, label, teamId, id: customViewId },
-    name,
-  } = route;
-
-  const conversationTypeMap = {
-    conversation_through_mentions: 'mention',
-    conversation_through_participating: 'participating',
-    conversation_through_unattended: 'unattended',
-  };
-  return conversationListPageURL({
-    accountId: accountId.value,
-    inboxId,
-    label,
-    teamId,
-    conversationType: conversationTypeMap[name],
-    customViewId,
-  });
-});
+const backButtonUrl = computed(() =>
+  conversationListPageURLFromRoute(route, accountId.value)
+);
 
 const isHMACVerified = computed(() => {
   if (!isAWebWidgetInbox.value) {

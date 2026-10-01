@@ -5,10 +5,13 @@ import validations, { getPipelineStageTitleErrorMessage } from './validations';
 import { useVuelidate } from '@vuelidate/core';
 
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import StageColorPicker from './StageColorPicker.vue';
+import { DEFAULT_STAGE_COLOR } from './constants';
 
 export default {
   components: {
     NextButton,
+    StageColorPicker,
   },
   props: {
     selectedStage: {
@@ -42,7 +45,7 @@ export default {
   },
   mounted() {
     this.title = this.selectedStage.title;
-    this.color = this.selectedStage.color;
+    this.color = this.selectedStage.color || DEFAULT_STAGE_COLOR;
   },
   methods: {
     onClose() {
@@ -82,10 +85,10 @@ export default {
         @blur="v$.title.$touch"
       />
       <div class="w-full">
-        <label>
+        <span class="block mb-1 text-sm font-medium text-n-slate-12">
           {{ $t('PIPELINE_STAGE_MGMT.FORM.COLOR.LABEL') }}
-          <woot-color-picker v-model="color" />
-        </label>
+        </span>
+        <StageColorPicker v-model="color" />
       </div>
       <div class="flex items-center justify-end w-full gap-2 px-0 py-2">
         <NextButton

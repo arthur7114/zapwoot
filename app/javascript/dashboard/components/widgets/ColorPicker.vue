@@ -44,7 +44,7 @@ export default {
       v-if="isPickerOpen"
       v-on-clickaway="closeTogglePicker"
       disable-alpha
-      :model-value="modelValue"
+      :model-value="modelValue || '#000000'"
       class="colorpicker--chrome"
       @update:model-value="updateColor"
     />

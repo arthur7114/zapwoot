@@ -15,7 +15,8 @@
         "REQUIRED_ERROR": "Stage name is required"
       },
       "COLOR": {
-        "LABEL": "Color"
+        "LABEL": "Color",
+        "CUSTOM": "Custom color"
       },
       "EDIT": "Edit",
       "CREATE": "Create",

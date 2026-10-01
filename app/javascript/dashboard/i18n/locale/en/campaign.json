@@ -241,7 +241,7 @@
           },
           "MESSAGE": {
             "LABEL": "Message",
-            "PLACEHOLDER": "Write the message. Liquid variables such as the contact name are supported.",
+            "PLACEHOLDER": "Write the message. Variables are supported: {'{{'}contact.first_name{'}}'} and {'{{'}saudacao{'}}'} (Bom dia, Boa tarde or Boa noite, by the time it is sent).",
             "ERROR": "Message is required"
           },
           "INBOX": {

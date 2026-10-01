@@ -10,6 +10,9 @@ import CmdBarConversationSnooze from 'dashboard/routes/dashboard/commands/CmdBar
 import { emitter } from 'shared/helpers/mitt';
 import SidepanelSwitch from 'dashboard/components-next/Conversation/SidepanelSwitch.vue';
 import ConversationSidebar from 'dashboard/components/widgets/conversation/ConversationSidebar.vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useKeyboardEvents } from 'dashboard/composables/useKeyboardEvents';
+import { conversationListPageURLFromRoute } from 'dashboard/helper/URLHelper';
 
 export default {
   components: {
@@ -53,9 +56,25 @@ export default {
       default: 0,
     },
   },
-  setup() {
+  setup(props) {
     const { uiSettings, updateUISettings } = useUISettings();
     const { accountId } = useAccount();
+    const route = useRoute();
+    const router = useRouter();
+
+    // Like WhatsApp Web: Esc closes the open chat and goes back to the list.
+    // Anything that already handled the key (modals, mention/canned menus, emoji
+    // picker) calls preventDefault or renders a dialog, so we stay out of its way.
+    useKeyboardEvents({
+      Escape: {
+        action: e => {
+          if (!props.conversationId || e.defaultPrevented) return;
+          if (document.querySelector('.modal-mask, [role="dialog"]')) return;
+          router.push(conversationListPageURLFromRoute(route, accountId.value));
+        },
+        allowOnFocusedInput: true,
+      },
+    });
 
     return {
       uiSettings,

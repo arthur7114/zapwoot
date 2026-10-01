@@ -51,9 +51,9 @@
       "HELP_CENTER_ANALYZING_WEBSITE": "Analisando seu site…",
       "HELP_CENTER_SETTING_UP_CATEGORIES": "Configurando categorias…",
       "HELP_CENTER_CURATING_ARTICLES": "Curando artigos…",
-      "HELP_CENTER_ARTICLES": "Artigo {count} criado com {count} artigos",
-      "HELP_CENTER_CATEGORIES": "categoria {count} | {count} categorias",
-      "HELP_CENTER_SUMMARY": "Artigo {count} criado com {categories} (200) {count} artigos criados com {categories}"
+      "HELP_CENTER_ARTICLES": "{count} artigo criado | {count} artigos criados",
+      "HELP_CENTER_CATEGORIES": "{count} categoria | {count} categorias",
+      "HELP_CENTER_SUMMARY": "{count} artigo criado em {categories} | {count} artigos criados em {categories}"
     },
     "CHANNELS": {
       "TITLE": "Conectar todos os seus canais de conversa",

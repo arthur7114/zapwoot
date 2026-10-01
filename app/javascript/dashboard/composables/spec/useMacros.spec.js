@@ -141,7 +141,7 @@ describe('useMacros', () => {
     const { getMacroDropdownValues } = useMacros();
     const result = getMacroDropdownValues('assign_agent');
     expect(result[0]).toEqual({ id: 'nil', name: 'AUTOMATION.NONE_OPTION' });
-    expect(result[1]).toEqual({ id: 'self', name: 'Self' });
+    expect(result[1]).toEqual({ id: 'self', name: 'AUTOMATION.SELF_OPTION' });
     expect(result.slice(2)).toEqual(mockAgents);
   });
 
@@ -183,7 +183,7 @@ describe('useMacros', () => {
     ]);
     expect(getMacroDropdownValues('assign_agent')).toEqual([
       { id: 'nil', name: 'AUTOMATION.NONE_OPTION' },
-      { id: 'self', name: 'Self' },
+      { id: 'self', name: 'AUTOMATION.SELF_OPTION' },
     ]);
   });
 });

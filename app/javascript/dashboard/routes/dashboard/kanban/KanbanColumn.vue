@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Draggable from 'vuedraggable';
 import KanbanCard from './KanbanCard.vue';
@@ -32,6 +32,16 @@ watch(
   }
 );
 
+const stageColor = computed(() => props.stage.color || 'var(--color-n-brand)');
+const tint = percent =>
+  `color-mix(in srgb, ${stageColor.value} ${percent}%, transparent)`;
+
+const columnStyle = computed(() => ({
+  backgroundColor: tint(12),
+  borderTopColor: stageColor.value,
+}));
+const headerStyle = computed(() => ({ backgroundColor: tint(22) }));
+
 const onChange = event => {
   if (event.added) {
     emit('move', {
@@ -43,12 +53,14 @@ const onChange = event => {
 </script>
 
 <template>
-  <div class="flex flex-col flex-shrink-0 w-72 h-full bg-n-slate-2 rounded-lg">
-    <div class="flex items-center gap-2 px-3 py-2.5 border-b border-n-weak">
-      <span
-        class="flex-shrink-0 size-2.5 rounded-full"
-        :style="{ backgroundColor: stage.color || 'var(--color-n-brand)' }"
-      />
+  <div
+    class="flex flex-col flex-shrink-0 w-72 h-full overflow-hidden border-t-4 rounded-lg"
+    :style="columnStyle"
+  >
+    <div
+      class="flex items-center gap-2 px-3 py-2.5 border-b border-n-weak"
+      :style="headerStyle"
+    >
       <span class="min-w-0 text-heading-3 text-n-slate-12 truncate">
         {{ stage.title }}
       </span>

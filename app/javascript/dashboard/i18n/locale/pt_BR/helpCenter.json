@@ -50,7 +50,8 @@
         "ERROR_FILE_SIZE": "O tamanho da imagem deve ser menor que {size}MB",
         "ERROR_FILE_FORMAT": "O formato da imagem deve ser jpg, jpeg ou png",
         "ERROR_FILE_DIMENSIONS": "Dimensões da imagem devem ser menores que 2000 x 2000"
-      }
+      },
+      "TITLE_PLACEHOLDER": "Título"
     },
     "ARTICLE_SETTINGS": {
       "TITLE": "Configurações de Artigo",
@@ -520,7 +521,7 @@
     "ARTICLES_PAGE": {
       "ARTICLE_CARD": {
         "CARD": {
-          "VIEWS": "Visualização {count} de {count} visualizações",
+          "VIEWS": "{count} visualização | {count} visualizações",
           "DROPDOWN_MENU": {
             "PUBLISH": "Publicar",
             "DRAFT": "Rascunho",
@@ -618,7 +619,7 @@
         "DELETE": "Excluir",
         "STATUS_SUCCESS": "Artigos atualizados com sucesso",
         "STATUS_ERROR": "Falha ao atualizar artigos",
-        "STATUS_SKIPPED": "1 artigo com edições não publicadas foi ignorado - abra-o para publicar ou descartar. Artigos de {count} com edições não publicadas foram ignorados - abra-os para publicar ou descartar.",
+        "STATUS_SKIPPED": "1 artigo com edições não publicadas foi ignorado — abra-o para publicar ou descartar. | {count} artigos com edições não publicadas foram ignorados — abra-os para publicar ou descartar.",
         "STATUS_SKIPPED_ALL": "Esses artigos têm edições não publicadas — abra cada um para publicar ou descartar.",
         "CATEGORY_SUCCESS": "Artigos movidos com sucesso",
         "CATEGORY_ERROR": "Falha ao mover artigos",
@@ -634,7 +635,7 @@
         "NEW_CATEGORY": "Nova categoria",
         "EDIT_CATEGORY": "Alterar categoria",
         "SEARCH_PLACEHOLDER": "Pesquisar categorias...",
-        "CATEGORIES_COUNT": "categoria {n} | {n} categorias",
+        "CATEGORIES_COUNT": "{n} categoria | {n} categorias",
         "BREADCRUMB": {
           "CATEGORY_LOCALE": "Categorias ({localeCode})",
           "ACTIVE_CATEGORY": "{categoryName} ({categoryCount} artigos) | {categoryName} ({categoryCount} artigo)"
@@ -649,7 +650,10 @@
         "SUBTITLE": "Não foi possível encontrar nenhuma categoria que corresponda à sua pesquisa. Tente um termo diferente."
       },
       "CATEGORY_CARD": {
-        "ARTICLES_COUNT": "artigo {count} | {count} artigos"
+        "ARTICLES_COUNT": "{count} artigo | {count} artigos",
+        "EDIT": "Editar",
+        "DELETE": "Excluir",
+        "NO_DESCRIPTION": "Nenhuma descrição adicionada"
       },
       "CATEGORY_DIALOG": {
         "CREATE": {
@@ -703,16 +707,16 @@
       }
     },
     "LOCALES_PAGE": {
-      "LOCALES_COUNT": "Localizações não disponíveis | {n} local | {n} localidades",
+      "LOCALES_COUNT": "Nenhum idioma disponível | {n} idioma | {n} idiomas",
       "NEW_LOCALE_BUTTON_TEXT": "Nova localização",
       "SEARCH_PLACEHOLDER": "Pesquisar locais...",
       "SEARCH_EMPTY_STATE": {
-        "TITLE": "No matching locales",
+        "TITLE": "Nenhum idioma correspondente",
         "SUBTITLE": "Não conseguimos encontrar nenhum idioma correspondente à sua pesquisa. Tente um termo diferente."
       },
       "LOCALE_CARD": {
-        "ARTICLES_COUNT": "artigo {count} | {count} artigos",
-        "CATEGORIES_COUNT": "categoria {count} | {count} categorias",
+        "ARTICLES_COUNT": "{count} artigo | {count} artigos",
+        "CATEGORIES_COUNT": "{count} categoria | {count} categorias",
         "DEFAULT": "Padrão",
         "DRAFT": "Rascunho",
         "DROPDOWN_MENU": {
@@ -818,7 +822,7 @@
       "EDIT_ARTICLE": {
         "MORE_PROPERTIES": "Mais propriedades",
         "UNCATEGORIZED": "Não categorizado",
-        "EDITOR_PLACEHOLDER": "Write your content here. Type '/' for formatting options."
+        "EDITOR_PLACEHOLDER": "Escreva seu conteúdo aqui. Digite '/' para ver as opções de formatação."
       },
       "ARTICLE_PROPERTIES": {
         "ARTICLE_PROPERTIES": "Propriedades do artigo",
