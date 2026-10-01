@@ -685,7 +685,10 @@ export default {
     getKeyboardEvents() {
       return {
         Escape: {
-          action: () => {
+          action: e => {
+            if (!this.showEmojiPicker) return;
+            // Lets the conversation-level Esc handler know the key was consumed.
+            e.preventDefault();
             this.hideEmojiPicker();
           },
           allowOnFocusedInput: true,

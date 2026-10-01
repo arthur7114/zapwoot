@@ -59,6 +59,27 @@ export const conversationListPageURL = ({
   return frontendURL(url);
 };
 
+const CONVERSATION_TYPE_BY_ROUTE = {
+  conversation_through_mentions: 'mention',
+  conversation_through_participating: 'participating',
+  conversation_through_unattended: 'unattended',
+};
+
+export const conversationListPageURLFromRoute = (route, accountId) => {
+  const {
+    params: { inbox_id: inboxId, label, teamId, id: customViewId },
+    name,
+  } = route;
+  return conversationListPageURL({
+    accountId,
+    inboxId,
+    label,
+    teamId,
+    conversationType: CONVERSATION_TYPE_BY_ROUTE[name],
+    customViewId,
+  });
+};
+
 export const isValidURL = value => {
   /* eslint-disable no-useless-escape */
   const URL_REGEX =
