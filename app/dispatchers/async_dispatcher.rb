@@ -19,6 +19,7 @@ class AsyncDispatcher < BaseDispatcher
       ParticipationListener.instance,
       Conversations::UnreadCounts::Listener.instance,
       ReportingEventListener.instance,
+      WahaLabelListener.instance,
       WebhookListener.instance
     ]
   end
