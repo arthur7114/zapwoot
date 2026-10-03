@@ -131,6 +131,7 @@ Se `.env.local` não existir, copie os nomes abaixo e preencha.
 | `CHATWOOT_BOT_TOKEN` | token do AgentBot Edson (id 1) | `GET /api/v1/accounts/1/inboxes/11/agent_bot` |
 | `EVOLUTION_URL` · `EVOLUTION_INSTANCE` · `EVOLUTION_APIKEY` | ponte do WhatsApp | instância `gd-zapwoot`, **não** `gdcomercial` |
 | `EASYPANEL_URL` · `EASYPANEL_PROJECT` · `EASYPANEL_TOKEN` | deploy | projeto `ambient1`; token em Configurações → API |
+| `WAHA_URL` · `WAHA_API_KEY` · `WAHA_SESSION` · `WAHA_INBOX_ID` | ponte de etiquetas WhatsApp ↔ etapas do kanban | serviço `waha` no Easypanel; sessão `gd`, inbox `11`. Precisam estar no `chatwoot` **e** no `chatwoot-sidekiq` |
 | `N8N_URL` · `N8N_WORKFLOW_*` | fluxos da IA | pré-atendimento `OecPlRL3BqSG604K`, lembrete 48h `ytJLKEhIvprbHTj5` |
 
 Regras que evitam retrabalho:
@@ -152,6 +153,12 @@ Regras que evitam retrabalho:
   o kernel matando o node (heap 4096) ou o V8 abortando com `SIGABRT` (heap 2048).
   O `NODE_OPTIONS` do `docker/Dockerfile` é só o default; o workflow passa 4096 como
   build-arg porque o runner tem 7 GB. Se um dia voltar a buildar no host, adicione swap antes.
+- **Etiquetas do WhatsApp e etapas do kanban andam juntas.** O WAHA (sessão `gd`) manda
+  `label.chat.added`/`label.chat.deleted` para `POST /webhooks/waha`, autenticado pelo header
+  `X-Api-Key`. Etiqueta com nome de etapa move o card; as outras viram etiqueta da conversa.
+  No sentido inverso, mudar a etapa troca a etiqueta de etapa no chat e preserva as demais.
+  O webhook da sessão assina **só** os eventos de etiqueta: assinar mensagens duplicaria o
+  fluxo do Edson, que já recebe tudo pela Evolution.
 - **Nenhum segredo entra como build-arg.** O Dockerfile precompila assets com
   `SECRET_KEY_BASE=precompile_placeholder`; os valores reais vivem no ambiente do
   serviço no Easypanel. A imagem no GHCR é pública e não carrega nada sensível.

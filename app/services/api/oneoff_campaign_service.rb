@@ -54,8 +54,21 @@ class Api::OneoffCampaignService
   end
 
   def audience_contacts
-    label_ids = campaign.audience.select { |audience| audience['type'] == 'Label' }.pluck('id')
-    campaign.account.contacts.tagged_with(campaign.account.labels.where(id: label_ids).pluck(:title), any: true)
+    campaign.account.contacts.tagged_with(audience_label_titles, any: true)
+  end
+
+  def audience_label_titles
+    @audience_label_titles ||= begin
+      label_ids = campaign.audience.select { |audience| audience['type'] == 'Label' }.pluck('id')
+      campaign.account.labels.where(id: label_ids).pluck(:title)
+    end
+  end
+
+  # Tags the WhatsApp chat with the campaign's audience labels once the message has had time to reach the phone.
+  def label_whatsapp_chat(contact)
+    return unless inbox.id.to_s == ENV.fetch('WAHA_INBOX_ID', nil)
+
+    Waha::AddChatLabelsJob.set(wait: 2.minutes).perform_later(contact, audience_label_titles)
   end
 
   def daily_limit_reached?(now)
@@ -77,6 +90,7 @@ class Api::OneoffCampaignService
     recipient.update!(message_content: content)
     message = create_message(contact, content)
     recipient.mark_sent!(message)
+    label_whatsapp_chat(contact)
   rescue StandardError => e
     Rails.logger.error("[API Campaign #{campaign.id}] Failed to send to contact #{recipient.contact_id}: #{e.message}")
     recipient.mark_failed!(e.message)

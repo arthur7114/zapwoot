@@ -15,6 +15,7 @@ class Waha::LabelMapping
   end
 
   def initialize(account)
+    @account = account
     @stages_by_key = account.pipeline_stages.index_by { |stage| self.class.normalize(stage.title) }
   end
 
@@ -26,7 +27,16 @@ class Waha::LabelMapping
     SYSTEM_LABELS.include?(self.class.normalize(label_name))
   end
 
+  # Reuses an existing conversation label with the same name ignoring accents ("Condomínio" -> condominio).
   def conversation_label_title(label_name)
-    label_name.delete(LEFT_TO_RIGHT_MARK).downcase.squish.tr(' ', '_')
+    key = self.class.normalize(label_name)
+    @account.labels.find { |label| self.class.normalize(label.title.tr('_', ' ')) == key }&.title ||
+      label_name.delete(LEFT_TO_RIGHT_MARK).downcase.squish.tr(' ', '_')
+  end
+
+  # The WhatsApp label matching a conversation label title, if any.
+  def whatsapp_label_for(title, whatsapp_labels)
+    key = self.class.normalize(title.tr('_', ' '))
+    whatsapp_labels.find { |label| self.class.normalize(label['name']) == key }
   end
 end

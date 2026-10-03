@@ -3,6 +3,10 @@ class Waha::Client
     get('labels')
   end
 
+  def create_label(name)
+    request(:post, 'labels', body: { name: name, color: 0 }.to_json)
+  end
+
   def chat_labels(chat_id)
     get("labels/chats/#{chat_id}")
   end
